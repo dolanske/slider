@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link rel="stylesheet" href="./slider.css" />
+    <title>Curry Slider</title>
+
+    <style>
+      /* body {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        background-color: rgb(24, 24, 24);
+        color: hsl(255, 80%, 68%);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      } */
+      /* 
+      #slider {
+        margin-bottom: 32px;
+      } */
+
+      hr {
+        margin: 32px 0;
+      }
+
+      .slide {
+        background-color: rgb(64, 64, 64);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slider">
+      <div class="slide"><h2>Slide 1</h2></div>
+      <div class="slide"><h2>Slide 2</h2></div>
+      <div class="slide"><h2>Slide 3</h2></div>
+      <div class="slide"><h2>Slide 4</h2></div>
+    </div>
+
+    <hr />
+    <h3>Buzzcut test</h3>
+    <div slider="lol" slider-width="420" slider-height="256">
+      <div class="slide"><h2>LMAO 1</h2></div>
+      <div class="slide"><h2>LMAO 2</h2></div>
+      <div class="slide"><h2>LMAO 3</h2></div>
+    </div>
+
+    <div>
+      <button id="set">NEXT</button>
+    </div>
+  </body>
+
+  <script type="module">
+    import Slider from "./index.js"
+    import {
+      register,
+      next,
+      onSlideChange,
+      onDragStart,
+      onDragEnd,
+      onSlideClick
+    } from "./index.js"
+
+    register()
+
+    // helper to query DOM elements shorter
+    const $el = (selector) => document.querySelector(selector)
+
+    const slider = new Slider("#slider", {
+      width: 728,
+      height: 480
+    })
+
+    onSlideClick("lol", () => {
+      console.log("slide clicked")
+    })
+  </script>
+</html>

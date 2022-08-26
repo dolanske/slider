@@ -1,0 +1,88 @@
+/* 
+REVIEW
+
+Figure out if it makes more sense to store styling in a .css file or if it should be applied with
+javascript, meaning less user work etc (might go with JS when its done)
+
+*/
+
+.slider {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+}
+
+.slider-dots .slider-dot {
+  display: block;
+  width: 10px !important;
+  height: 10px !important;
+  border: none;
+  cursor: pointer;
+  border-radius: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.slider-dots .slider-dot:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.slider-dots .slider-dot.active {
+  background-color: #8d6cef;
+}
+
+#slider-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  /* cursor: grab; */
+}
+
+#slider-button-left,
+#slider-button-right {
+  display: block;
+  background-color: fff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: none;
+  right: unset;
+  width: 32px;
+  background-color: #ffffff26;
+  z-index: 10;
+}
+
+#slider-button-left:hover,
+#slider-button-right:hover {
+  background-color: #ffffff80;
+}
+
+#slider-button-left:disabled,
+#slider-button-right:disabled {
+  background-color: #ffffff1a;
+  pointer-events: none;
+}
+
+#slider-button-right {
+  inset: 0;
+  left: unset;
+}
+
+.slider-disable-transition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
