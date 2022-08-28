@@ -14,6 +14,7 @@ export function register() {
 
   elements.forEach((element) => {
     const id = element.attributes.getNamedItem("slider")?.value
+
     const width = Number(
       element.attributes.getNamedItem("slider-width")?.value ?? DEFAULTS.width
     )
@@ -44,7 +45,7 @@ export function register() {
       element
     )
 
-    Reflect.set(_registry, slider.id, slider)
+    Reflect.set(_registry, id, slider)
   })
 }
 
@@ -55,7 +56,7 @@ const invalidUse = (id, func) =>
 
 export function next(id, by) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "next()")
 
   slider.next(by)
@@ -63,7 +64,7 @@ export function next(id, by) {
 
 export function prev(id, by) {
   if (!id) console.warn("Using buzzcut functions requires a slider id.")
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "prev()")
 
   slider.prev(by)
@@ -71,7 +72,7 @@ export function prev(id, by) {
 
 export function set(id, func) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "set()")
 
   slider.set(func)
@@ -79,7 +80,7 @@ export function set(id, func) {
 
 export function add(id, slide, index = null) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "add()")
 
   slider.add(slide, index)
@@ -87,7 +88,7 @@ export function add(id, slide, index = null) {
 
 export function remove(id, index) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "remove()")
 
   slider.remove(index)
@@ -95,7 +96,7 @@ export function remove(id, index) {
 
 export function disable(id) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "disable()")
 
   slider.disable()
@@ -103,7 +104,7 @@ export function disable(id) {
 
 export function enable(id) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "enable()")
 
   slider.enable()
@@ -111,7 +112,7 @@ export function enable(id) {
 
 export function toggle(id) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "toggle()")
 
   slider.toggle()
@@ -119,7 +120,7 @@ export function toggle(id) {
 
 export function onDragStart(id, callback) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "onDragStart()")
 
   slider.onDragStart(callback)
@@ -127,7 +128,7 @@ export function onDragStart(id, callback) {
 
 export function onDragEnd(id, callback) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "onDragEnd()")
 
   slider.onDragEnd(callback)
@@ -135,7 +136,7 @@ export function onDragEnd(id, callback) {
 
 export function onSlideClick(id, callback) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "onSlideClick()")
 
   slider.onSlideClick(callback)
@@ -143,7 +144,7 @@ export function onSlideClick(id, callback) {
 
 export function onSlideChange(id, from, callback) {
   if (!id) noIdWarning()
-  const slider = Reflect.get(_registry, id)
+  const slider = get(id)
   if (!slider) invalidUse(id, "onSlideChange()")
 
   slider.onSlideChange(from, callback)

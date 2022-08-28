@@ -1,5 +1,111 @@
 "use strict"
 
+/**
+ * CSS
+ */
+
+const iconLeft =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z"/></svg>'
+const iconright =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>'
+
+const css = /* CSS */ `
+  .slider {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+  }
+  
+  .slider-dots .slider-dot {
+    transition: 0.1s all ease-in-out;
+    display: block;
+    width: 12px !important;
+    height: 12px !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 100%;
+    background-color: rgb(100, 100, 100);
+  }
+  
+  .slider-dots .slider-dot:hover {
+    background-color: rgb(175, 175, 175);
+  }
+  
+  .slider-dots .slider-dot.active {
+    background-color: #a78df5;
+  }
+  
+  #slider-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+  }
+  
+  #slider-button-left,
+  #slider-button-right {
+    border-radius: 50%;
+    display: block;
+    background-color: fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.1s all ease-in-out;
+    border: none;
+    right: unset;
+    width: 48px;
+    height: 48px;
+    left: 8px;
+    background-color: rgb(175, 175, 175);
+    z-index: 10;
+    cursor: pointer;
+  }
+  
+  #slider-button-left:hover,
+  #slider-button-right:hover {
+    background-color: rgb(225, 225, 225);
+  }
+  
+  #slider-button-left:disabled,
+  #slider-button-right:disabled {
+    background-color: rgb(100, 100, 100);
+    pointer-events: none;
+  }
+  
+  #slider-button-left svg,
+  #slider-button-right svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+  
+  #slider-button-right {
+    left: unset;
+    right: 8px;
+  }
+  
+  .slider-disable-transition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+`
+
 /*----------  Helper Functions  ----------*/
 
 /**
@@ -35,6 +141,11 @@ const isEl = (v) =>
       v !== null &&
       v.nodeType === 1 &&
       typeof v.nodeName === "string"
+const makeEl = (template) => {
+  const wrap = document.createElement("div")
+  wrap.innerHTML = template
+  return wrap.firstChild
+}
 
 /*----------  Main Slider Class  ----------*/
 
@@ -48,8 +159,8 @@ const isEl = (v) =>
 // const DOT_CLASS = "slider-dot"
 
 export const DEFAULTS = {
-  width: 512,
-  height: 256,
+  width: null,
+  height: null,
   gap: 16,
   active: 0,
   dots: true,
@@ -65,11 +176,9 @@ class Slider {
       gap: DEFAULTS.gap,
       active: DEFAULTS.active,
       dots: DEFAULTS.dots,
-      buttons: DelayNode.buttons,
+      buttons: DEFAULTS.buttons,
       // TODO
-      // direction: "row",
-      // TODO
-      // reverse: false,
+      // vertical: true,
       transition: { time: 0.3, mode: "ease" },
       // TODO
       style: {
@@ -78,13 +187,10 @@ class Slider {
         dots: null
       },
 
-      // TODO: Implement custom elements for navigation
       custom: {
         dots: "",
         buttons: ""
       }
-      // TODO
-      // Implement callbacks
     }
 
     Object.assign(this.config, options)
@@ -122,6 +228,17 @@ class Slider {
       el: document.createElement("button"),
       by: 1
     }
+
+    const custom = this.config.custom.buttons
+
+    if (custom) {
+      this.left.el = typeof custom === "string" ? makeEl(custom) : custom
+      this.right.el = typeof custom === "string" ? makeEl(custom) : custom
+    } else {
+      this.left.el.innerHTML = iconLeft
+      this.right.el.innerHTML = iconright
+    }
+
     this.dots = null
 
     this._init()
@@ -131,6 +248,17 @@ class Slider {
 
   _init() {
     this.root = this.root || document.querySelector(this.id)
+
+    // Append
+    if (!this.config.disableStyle) {
+      const styleEl = document.querySelector("#slider-style-element")
+      if (!styleEl) {
+        const style = document.createElement("style")
+        style.id = "slider-style-element"
+        style.appendChild(document.createTextNode(css))
+        document.head.appendChild(style)
+      }
+    }
 
     if (!this.root) {
       throw new Error(
@@ -145,6 +273,28 @@ class Slider {
     this.wrap = this.root.children[0]
     this.slides = this.wrap.children
 
+    if (this.config.width) {
+      this.rootWidth = this.config.width
+    } else {
+      this.rootWidth = Number(
+        window
+          .getComputedStyle(this.root)
+          .getPropertyValue("width")
+          .slice(0, -2)
+      )
+    }
+
+    if (this.config.height) {
+      this.rootHeight = this.config.height
+    } else {
+      this.rootHeight = Number(
+        window
+          .getComputedStyle(this.root)
+          .getPropertyValue("height")
+          .slice(0, -2)
+      )
+    }
+
     // Prepare slide sizing
     // NOTE: should get a slide property which is not tied to a slide itself
     // The reason for that is, if we show 2 divs per slide, then suddenly we'll
@@ -154,7 +304,7 @@ class Slider {
       // TODO: if more than 1 slide is showing, must calculate slide width based on that
       // IMPLEMENT
     } else {
-      this.slideWidth = this.config.width
+      this.slideWidth = this.rootWidth
     }
 
     // Create style element and append it to the head to store dynamic styles
@@ -263,8 +413,13 @@ class Slider {
   _calculateWrapperStyle() {
     this.style.replaceChildren()
 
-    setStyle(this.root, "width", this.config.width, "px")
-    setStyle(this.root, "height", this.config.height, "px")
+    if (this.config.height) {
+      setStyle(this.root, "height", this.rootHeight, "px")
+    }
+
+    if (this.config.width) {
+      setStyle(this.root, "width", this.rootWidth, "px")
+    }
 
     setStyle(
       this.wrap,
@@ -281,14 +436,14 @@ class Slider {
     setStyle(
       this.wrap,
       "width",
-      this.config.width * this.slides.length +
+      this.rootWidth * this.slides.length +
         this.slides.length * this.config.gap,
       "px"
     )
 
     for (const slide of this.slides) {
-      setStyle(slide, "width", this.config.width, "px")
-      setStyle(slide, "height", this.config.height, "px")
+      setStyle(slide, "width", this.rootWidth, "px")
+      setStyle(slide, "height", this.rootHeight, "px")
     }
   }
 
@@ -305,9 +460,18 @@ class Slider {
 
       // Loop over each slide and create a button for it
       for (let i = 0; i < this.slides.length; i++) {
-        const dot = document.createElement("button")
+        let dot = document.createElement("button")
 
-        dot.classList.add("slider-dot")
+        // If user wants to use custom element for dots
+        const custom = this.config.custom.dots
+
+        if (custom) {
+          // Replace native dot with the userp provided element
+          dot = typeof custom === "string" ? makeEl(custom) : custom
+        } else {
+          dot.classList.add("slider-dot")
+        }
+
         dot.addEventListener("click", () => {
           this.changedBy = "dot"
           this._set(i)
@@ -492,12 +656,7 @@ class Slider {
     if (isNil(index)) index = this.slides.length
 
     if (typeof slide === "string") {
-      // Create a dummy element & assign the element as its inner html
-      const temp_el = document.createElement("div")
-      temp_el.innerHTML = slide
-
-      // grap the first child of dummy element
-      this.add(temp_el.firstChild, index)
+      this.add(makeEl(slide), index)
     } else if (isFunc(slide)) {
       // We insert a function which should return a string or a html node
 
@@ -564,13 +723,30 @@ class Slider {
     this._updateNav(this.active)
   }
 
+  /**
+   * Disable slider, freezing it until enabled
+   */
+
+  disable() {
+    this.config.enabled = false
+    this.root.style.pointerEvents = "none"
+  }
+
+  /**
+   * Enable slider
+   */
+
   enable() {
     this.config.enabled = true
     this.root.style.pointerEvents = "all"
   }
 
+  /**
+   * Toggle between enabled and disabled state
+   */
+
   toggle() {
-    if (this.config.enableed) {
+    if (this.config.enabled) {
       this.disable()
     } else {
       this.enable()
@@ -582,35 +758,80 @@ class Slider {
     // while keeping active slide
   }
 
-  swap() {
+  reverse() {
     // TODO
     // Swaps all children
   }
 
-  disable() {
-    this.config.enabled = false
-    this.root.style.pointerEvents = "none"
-  }
-
   /*----------  Events  ----------*/
+
+  /**
+   * Fires when user begins dragging a slide.
+   *
+   * Callback params (destructured)
+   *
+   * - `fromIndex` Number of the slide the draggging began on
+   * - `fromEl` Slide element which the dragging began on
+   *
+   * @param {Function} callback
+   *
+   */
 
   onDragStart(callback) {
     this.events.onDragStart = callback
   }
 
+  /**
+   * Fires when dragging ends
+   *
+   * Callback params (destructured)
+   *
+   * - `fromIndex` Number of the slide the draggging began on
+   * - `fromEl` Slide element which the dragging began on
+   * - `toIndex` Number of the slide the dragging stopped on
+   * - `toEl` Slide element which dragging stopped on
+   *
+   * @param {Function} callback
+   */
+
   onDragEnd(callback) {
     this.events.onDragEnd = callback
   }
+
+  /**
+   * Fires when a slide is clicked
+   *
+   * Callback params (destructured)
+   *
+   * - `index` Number of the clicked slide
+   * - `el` Clicked slide element
+   *
+   * @param {Function} callback
+   */
 
   onSlideClick(callback) {
     this.events.onSlideClick = callback
   }
 
-  onSlideChange(from, callback) {
+  /**
+   * If only callback is provided, it will trigger whenever a slide is changed. Otherwise triggered if the provided location is affected.
+   *
+   * Callback params (destructured)
+   *
+   * - `fromIndex` Number of the slide the draggging began on
+   * - `fromEl` Slide element which the dragging began on
+   * - `toIndex` Number of the slide the dragging stopped on
+   * - `toEl` Slide element which dragging stopped on
+   *
+   * @param {button | dot | drag} location Specify which event to watch for
+   * @param {Function} callback
+   */
+
+  onSlideChange(location, callback) {
     if (!callback) {
-      this.events.onSlideChange = from
+      this.events.onSlideChange = location
     } else {
-      switch (from) {
+      switch (location) {
         case "button": {
           this.events.onSlideChangeFromButton = callback
           break

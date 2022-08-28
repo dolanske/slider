@@ -29,7 +29,7 @@ And you're good to go 👍. Out of the box the slider comes with a few methods a
 
 # The 'Buzzcut approach'
 
-Hate javascript? Tell which linux distro you use while you're at it boss. You can also tag the slider element with an attribute `slider="<your_slider_id>"` or just `slider`. Note: if you don't specify the id, the slider will generate it for you. But you won't know it lol.
+Hate writing javascript? Tell which linux distro you use while you're at it boss. You can also tag the slider element with an attribute `slider="<your_slider_id>"` or just `slider`. Note: if you don't specify the id, the slider will generate it for you. But you won't know it lol.
 
 With this approach, you don't have to explicitly create a slider instance for each slider. You can also use imported methods, but you have to pass the `your_slider_id` before other arguments.
 
@@ -70,9 +70,9 @@ const slider = new Slider("#my-slider", {
   // Controls if user can interact with the slider
   enabled: true,
   // Slider element width in pixels
-  width: 512,
+  width: null, // 100%
   // Slider element height in pixels
-  height: 256,
+  height: null, // 100%
   // Gap between each slide in pixels
   gap: 16,
   // Currently active slide
@@ -82,7 +82,7 @@ const slider = new Slider("#my-slider", {
   // Enables / disables left and right control buttons
   buttons: true,
   // Can be set to either 'row' or 'column;
-  direction: "row",
+  vertical: false,
   // Update the CSS transition object
   transition: { time: 0.3, mode: "ease" },
   // Apply custom inline styles to the following elements
@@ -93,6 +93,8 @@ const slider = new Slider("#my-slider", {
     buttons: "",
     dots: ""
   },
+  // Renders slider without any CSS at all, everything is up to the user to style
+  disableStyle: false
   // Replace the navigation elements with your own
   // Accepts a template string or a HTMLElement
   custom: {
@@ -104,7 +106,7 @@ const slider = new Slider("#my-slider", {
     onDragStart: null,
     onDragEnd: null,
     onSlideClick: null,
-    onSlideChange: null,
+    onSlideChange: null, // Fires parallel with its specific counterpart vvv
     onSlideChangeFromDot: null,
     onSlideChangeFromButton: null,
     onSlideChangeFromDrag: null
@@ -125,12 +127,12 @@ Parameters:
 ```js
 const slider = new Slider("#sldier", {
   events: {
-    onDragStart(e) {}
+    onDragStart(event, { fromIndex, fromEl }) {}
   }
 })
 
 // Buzzcut
-onDragStart("my-slider", (e) => {})
+onDragStart("my-slider", (event, { fromIndex, fromEl }) => {})
 ```
 
 ### `onSlideClick`
@@ -146,12 +148,12 @@ Parameters:
 ```js
 const slider = new Slider("#sldier", {
   events: {
-    onSlideClick({ e, index, total }) {}
+    onSlideClick(event, { index, el }) {}
   }
 })
 
 // Buzzcut
-onSlideClick("my-slider", ({ event, index, total }) => {})
+onSlideClick("my-slider", (event, { index, el }) => {})
 ```
 
 ### `onSlideChangeFromDot`, `onSlideChangeFromButton`, `onSlideChangeFromDrag`
@@ -168,12 +170,15 @@ Parameters:
 ```js
 const slider = new Slider("#sldier", {
   events: {
-    onSlideChangeFromDot({ event, from, to, total }) {}
+    onSlideChangeFromDot(event, { fromIndex, fromEl, toIndex, toEl }) {}
   }
 })
 
 // Buzzcut
-onSlideChangeFromDrag("my-slider", ({ event, from, to, total }) => {})
+onSlideChangeFromDrag(
+  "my-slider",
+  (event, { fromIndex, fromEl, toIndex, toEl }) => {}
+)
 ```
 
 ---
