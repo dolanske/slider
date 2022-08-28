@@ -1,51 +1,19 @@
 "use strict"
 
-/**
- * CSS
- */
+/*----------  CSS  ----------*/
 
 const iconLeft =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z"/></svg>'
 const iconright =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>'
 
-const css = /* CSS */ `
+const rootCSS = /* CSS */ `
   .slider {
     display: block;
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: relative;
-  }
-  
-  .slider-dots {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    align-items: center;
-    width: 100%;
-    position: absolute;
-    bottom: 16px;
-    left: 0;
-  }
-  
-  .slider-dots .slider-dot {
-    transition: 0.1s all ease-in-out;
-    display: block;
-    width: 12px !important;
-    height: 12px !important;
-    border: none;
-    cursor: pointer;
-    border-radius: 100%;
-    background-color: rgb(100, 100, 100);
-  }
-  
-  .slider-dots .slider-dot:hover {
-    background-color: rgb(175, 175, 175);
-  }
-  
-  .slider-dots .slider-dot.active {
-    background-color: #a78df5;
   }
   
   #slider-wrapper {
@@ -56,6 +24,47 @@ const css = /* CSS */ `
     display: flex;
   }
   
+  .slider-disable-transition {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
+`
+
+const dotsCSS = /* CSS */ `
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+  }
+
+  .slider-dots .slider-dot {
+    transition: 0.1s all ease-in-out;
+    display: block;
+    width: 12px !important;
+    height: 12px !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 100%;
+    background-color: rgb(100, 100, 100);
+  }
+
+  .slider-dots .slider-dot:hover {
+    background-color: rgb(175, 175, 175);
+  }
+
+  .slider-dots .slider-dot.active {
+    background-color: #a78df5;
+  }
+`
+
+const buttonsCSS = /* CSS */ `
   #slider-button-left,
   #slider-button-right {
     border-radius: 50%;
@@ -96,13 +105,6 @@ const css = /* CSS */ `
   #slider-button-right {
     left: unset;
     right: 8px;
-  }
-  
-  .slider-disable-transition {
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    -o-transition: none !important;
-    transition: none !important;
   }
 `
 
@@ -146,14 +148,34 @@ const makeEl = (template) => {
   wrap.innerHTML = template
   return wrap.firstChild
 }
+function mergeDeep(...objects) {
+  const isObject = (obj) => obj && typeof obj === "object"
+
+  return objects.reduce((prev, obj) => {
+    Object.keys(obj).forEach((key) => {
+      const pVal = prev[key]
+      const oVal = obj[key]
+
+      if (Array.isArray(pVal) && Array.isArray(oVal)) {
+        prev[key] = pVal.concat(...oVal)
+      } else if (isObject(pVal) && isObject(oVal)) {
+        prev[key] = mergeDeep(pVal, oVal)
+      } else {
+        prev[key] = oVal
+      }
+    })
+
+    return prev
+  }, {})
+}
 
 /*----------  Main Slider Class  ----------*/
 
 // configuration
 // TODO: implement
-// TODO: refactor all slider properties to be more clear
 
 // TODO: move the class name settings to the configuration
+// TODO: implement config.class setting
 // const SLIDER_CLASS = "slider"
 // const DOTS_CLASS = "slider-dots"
 // const DOT_CLASS = "slider-dot"
@@ -164,7 +186,12 @@ export const DEFAULTS = {
   gap: 16,
   active: 0,
   dots: true,
-  buttons: true
+  buttons: true,
+  style: {
+    root: true,
+    buttons: true,
+    dots: true
+  }
 }
 
 class Slider {
@@ -182,18 +209,19 @@ class Slider {
       transition: { time: 0.3, mode: "ease" },
       // TODO
       style: {
-        slide: null,
-        buttons: null,
-        dots: null
+        root: DEFAULTS.style.root,
+        buttons: DEFAULTS.style.buttons,
+        dots: DEFAULTS.style.dots
       },
-
       custom: {
         dots: "",
         buttons: ""
       }
     }
 
-    Object.assign(this.config, options)
+    // Object.assign(this.config, options)
+
+    this.config = mergeDeep(this.config, options)
 
     this.ready = false
     this.id = id
@@ -252,10 +280,17 @@ class Slider {
     // Append
     if (!this.config.disableStyle) {
       const styleEl = document.querySelector("#slider-style-element")
+
       if (!styleEl) {
         const style = document.createElement("style")
         style.id = "slider-style-element"
-        style.appendChild(document.createTextNode(css))
+
+        if (this.config.style.root)
+          style.appendChild(document.createTextNode(rootCSS))
+        if (this.config.style.dots)
+          style.appendChild(document.createTextNode(dotsCSS))
+        if (this.config.style.buttons)
+          style.appendChild(document.createTextNode(buttonsCSS))
         document.head.appendChild(style)
       }
     }
@@ -334,8 +369,8 @@ class Slider {
     this.wrap.addEventListener("mousedown", (e) => this._handleDragStart(e))
     this.wrap.addEventListener("mousemove", (e) => this._handleDragMove(e))
     this.wrap.addEventListener("mouseup", (e) => this._handleDragEnd(e))
-
     // this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
+
     for (const slide of this.slides) {
       slide.addEventListener("click", (e) => this._handleSlideClick(e))
     }

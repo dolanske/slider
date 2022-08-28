@@ -1,61 +1,78 @@
-// prettier-ignore
 import Slider, { DEFAULTS } from "./slider.js"
 
 const _registry = {}
+let didWarn = false
 
 export function get(id) {
-  if (!id) return _registry
+  // If no Id is provided
+  if (!id) {
+    if (!didWarn) {
+      console.warn(
+        "When using buzzcut API, it is recommended to use a slider ID. Without an ID, the first slider in registry will be selected."
+      )
+      didWarn = true
+    }
+
+    if (Object.keys(_registry).length > 0) {
+      return Object.values(_registry)[0]
+    } else {
+      return null
+    }
+  }
+
   return Reflect.get(_registry, id)
 }
 
 export function register() {
   // Should be called when dom loads
-  const elements = document.querySelectorAll("[slider]")
+  document.addEventListener("DOMContentLoaded", () => {
+    const elements = document.querySelectorAll("[slider]")
 
-  elements.forEach((element) => {
-    const id = element.attributes.getNamedItem("slider")?.value
+    elements.forEach((element) => {
+      // TODO: add option for every single option
+      const id = element.attributes.getNamedItem("slider")?.value
 
-    const width = Number(
-      element.attributes.getNamedItem("slider-width")?.value ?? DEFAULTS.width
-    )
-    const height = Number(
-      element.attributes.getNamedItem("slider-height")?.value ?? DEFAULTS.height
-    )
-    const gap = Number(
-      element.attributes.getNamedItem("slider-gap")?.value ?? DEFAULTS.gap
-    )
-    const active =
-      element.attributes.getNamedItem("slider-slide")?.value ?? DEFAULTS.active
-    const dots =
-      element.attributes.getNamedItem("slider-dots")?.value ?? DEFAULTS.dots
-    const buttons =
-      element.attributes.getNamedItem("slider-buttons")?.value ??
-      DEFAULTS.buttons
+      const width = Number(
+        element.attributes.getNamedItem("slider-width")?.value ?? DEFAULTS.width
+      )
+      const height = Number(
+        element.attributes.getNamedItem("slider-height")?.value ??
+          DEFAULTS.height
+      )
+      const gap = Number(
+        element.attributes.getNamedItem("slider-gap")?.value ?? DEFAULTS.gap
+      )
+      const active =
+        element.attributes.getNamedItem("slider-slide")?.value ??
+        DEFAULTS.active
+      const dots =
+        element.attributes.getNamedItem("slider-dots")?.value ?? DEFAULTS.dots
+      const buttons =
+        element.attributes.getNamedItem("slider-buttons")?.value ??
+        DEFAULTS.buttons
 
-    const slider = new Slider(
-      id ?? Symbol(),
-      {
-        width,
-        height,
-        gap,
-        active,
-        dots,
-        buttons
-      },
-      element
-    )
+      const slider = new Slider(
+        id ?? Symbol(),
+        {
+          width,
+          height,
+          gap,
+          active,
+          dots,
+          buttons
+        },
+        element
+      )
 
-    Reflect.set(_registry, id, slider)
+      Reflect.set(_registry, id, slider)
+    })
   })
 }
 
-const noIdWarning = () =>
-  console.warn("Using buzzcut functions requires a slider id.")
 const invalidUse = (id, func) =>
-  console.warn(`Invalid id of <${id}> used for the ${func} function.`)
+  console.err(`Invalid id of <${id}> used for the ${func} function.`)
 
 export function next(id, by) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "next()")
 
@@ -63,7 +80,6 @@ export function next(id, by) {
 }
 
 export function prev(id, by) {
-  if (!id) console.warn("Using buzzcut functions requires a slider id.")
   const slider = get(id)
   if (!slider) invalidUse(id, "prev()")
 
@@ -71,7 +87,6 @@ export function prev(id, by) {
 }
 
 export function set(id, func) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "set()")
 
@@ -79,7 +94,6 @@ export function set(id, func) {
 }
 
 export function add(id, slide, index = null) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "add()")
 
@@ -87,7 +101,6 @@ export function add(id, slide, index = null) {
 }
 
 export function remove(id, index) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "remove()")
 
@@ -95,7 +108,6 @@ export function remove(id, index) {
 }
 
 export function disable(id) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "disable()")
 
@@ -103,7 +115,6 @@ export function disable(id) {
 }
 
 export function enable(id) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "enable()")
 
@@ -111,7 +122,6 @@ export function enable(id) {
 }
 
 export function toggle(id) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "toggle()")
 
@@ -119,7 +129,6 @@ export function toggle(id) {
 }
 
 export function onDragStart(id, callback) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "onDragStart()")
 
@@ -127,7 +136,6 @@ export function onDragStart(id, callback) {
 }
 
 export function onDragEnd(id, callback) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "onDragEnd()")
 
@@ -135,7 +143,6 @@ export function onDragEnd(id, callback) {
 }
 
 export function onSlideClick(id, callback) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "onSlideClick()")
 
@@ -143,7 +150,6 @@ export function onSlideClick(id, callback) {
 }
 
 export function onSlideChange(id, from, callback) {
-  if (!id) noIdWarning()
   const slider = get(id)
   if (!slider) invalidUse(id, "onSlideChange()")
 

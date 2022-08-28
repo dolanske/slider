@@ -42,7 +42,14 @@ Let's check out an example:
 </div>
 ```
 
-Without any javascript, that slider will work with all default configuration. Out of the box, slider offers you a couple methods, for controlling and adding / remove slides.
+```js
+import { register } from "./slider.js"
+
+// Either use this or import the register method before closing the </body> tag
+document.addEventListener("DOMContentLoaded", () => register())
+```
+
+After your DOM is loaded, make sure you import the `register()` method and run it. All it does is collect all the sliders you've prepared and initializes them.
 
 ```js
 import { next, prev } from "./slider.js"
@@ -85,16 +92,23 @@ const slider = new Slider("#my-slider", {
   vertical: false,
   // Update the CSS transition object
   transition: { time: 0.3, mode: "ease" },
-  // Apply custom inline styles to the following elements
-  // Can be either set to a string which will be applied inline
-  // or to false, which will reset all styles associated with that element
+  // Controls which parts of the slider come with pre-made styling
   style: {
-    slide: "",
-    buttons: "",
-    dots: ""
+    buttons: true,
+    dots: true,
+    // Disabling this could break the slider functionality without proper user implementation
+    root: true
   },
-  // Renders slider without any CSS at all, everything is up to the user to style
-  disableStyle: false
+  // Add custom classes to slider elements
+  // Because the wrapper + slides are initiated in HTML, you can only add custom class to the generated elements
+  class: {
+    buttons: null, // Both nav buttons
+    buttonLeft: null, // Only left button
+    buttonRight: null, // Only right button
+    dots: null,  // Wrapper for dots
+    dot: null // Each dot
+  }
+
   // Replace the navigation elements with your own
   // Accepts a template string or a HTMLElement
   custom: {
@@ -106,7 +120,7 @@ const slider = new Slider("#my-slider", {
     onDragStart: null,
     onDragEnd: null,
     onSlideClick: null,
-    onSlideChange: null, // Fires parallel with its specific counterpart vvv
+    onSlideChange: null, // Fires parallel with all the following events vvv
     onSlideChangeFromDot: null,
     onSlideChangeFromButton: null,
     onSlideChangeFromDrag: null
@@ -122,7 +136,9 @@ Events fired when dragging starts and ends
 
 Parameters:
 
-- `e` fired event
+- `event` fired event
+- `fromIndex` Number of the slide the draggging began on
+- `fromEl` Slide element which the dragging began on
 
 ```js
 const slider = new Slider("#sldier", {
@@ -141,7 +157,7 @@ Fired whenever user clicks (and doesn't drag) on a slide.
 
 Parameters:
 
-- `e`, `event` fired event
+- `event` fired event
 - `index` index of clicked slide
 - `total` amount of available slides
 
@@ -162,10 +178,11 @@ Fired whenever a slide is changed from one of the listed events.
 
 Parameters:
 
-- `e`, `event` fired event
-- `from` previously active slide index
-- `to` newly active slide index
-- `total` amount of available slides
+- `event` fired event
+- `fromIndex` Number of the slide the draggging began on
+- `fromEl` Slide element which the dragging began on
+- `toIndex` Number of the slide the dragging stopped on
+- `toEl` Slide element which dragging stopped on
 
 ```js
 const slider = new Slider("#sldier", {

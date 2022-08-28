@@ -31,13 +31,17 @@
     </div>
 
     <div>
-      <button id="set">NEXT</button>
+      <button id="next">NEXT</button>
     </div>
   </body>
 
   <script type="module">
     import Slider from "./index.js"
 
-    const slider = new Slider("#slider", {})
+    const slider = new Slider("#slider", {
+      style: {
+        buttons: false
+      }
+    })
   </script>
 </html>
