@@ -116,14 +116,14 @@ const slider = new Slider("#my-slider", {
     buttons: ""
   },
   // Callback functions called when these events occur
-  events: {
-    onDragStart: null,
-    onDragEnd: null,
-    onSlideClick: null,
-    onSlideChange: null, // Fires parallel with all the following events vvv
-    onSlideChangeFromDot: null,
-    onSlideChangeFromButton: null,
-    onSlideChangeFromDrag: null
+  on: {
+    dragStart: null,
+    dragEnd: null,
+    slideClick: null,
+    slideChange: null, // Fires parallel with all the following events vvv
+    slideChangeFromDot: null,
+    slideChangeFromButton: null,
+    slideChangeFromDrag: null
   }
 })
 ```
@@ -142,8 +142,8 @@ Parameters:
 
 ```js
 const slider = new Slider("#sldier", {
-  events: {
-    onDragStart(event, { fromIndex, fromEl }) {}
+  on: {
+    dragStart(event, { fromIndex, fromEl }) {}
   }
 })
 
@@ -163,8 +163,8 @@ Parameters:
 
 ```js
 const slider = new Slider("#sldier", {
-  events: {
-    onSlideClick(event, { index, el }) {}
+  on: {
+    slideClick(event, { index, el }) {}
   }
 })
 
@@ -186,8 +186,8 @@ Parameters:
 
 ```js
 const slider = new Slider("#sldier", {
-  events: {
-    onSlideChangeFromDot(event, { fromIndex, fromEl, toIndex, toEl }) {}
+  on: {
+    slideChangeFromDot(event, { fromIndex, fromEl, toIndex, toEl }) {}
   }
 })
 

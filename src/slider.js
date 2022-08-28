@@ -216,7 +216,18 @@ class Slider {
       }
     }
 
+    this.on = {
+      dragStart: noop,
+      dragEnd: noop,
+      slideClick: noop,
+      slideChange: noop,
+      slideChangeFromButton: noop,
+      slideChangeFromDot: noop,
+      slideChangeFromDrag: noop
+    }
+
     this.config = mergeDeep(this.config, options)
+    this.on = Object.assign(this.on, options?.on ?? {})
 
     this.ready = false
     this.id = id
@@ -231,16 +242,6 @@ class Slider {
     this.fromLeft = 0
 
     this.changedBy = ""
-
-    this.events = {
-      onDragStart: noop,
-      onDragEnd: noop,
-      onSlideClick: noop,
-      onSlideChange: noop,
-      onSlideChangeFromButton: noop,
-      onSlideChangeFromDot: noop,
-      onSlideChangeFromDrag: noop
-    }
 
     this.left = {
       el: document.createElement("button"),
@@ -383,7 +384,7 @@ class Slider {
     this.wrap.classList.add("slider-disable-transition")
     this.dragging = true
     this.dragStart = this._currentDragPos(e)
-    this.events.onDragStart(e, {
+    this.on.dragStart(e, {
       fromIndex: this.active,
       fromEl: this.slides[this.active]
     })
@@ -406,7 +407,7 @@ class Slider {
         this.next()
       }
 
-      this.events.onDragEnd(e, {
+      this.on.dragEnd(e, {
         fromIndex: from,
         fromEl: this.slides[from],
         toIndex: this.active,
@@ -426,7 +427,7 @@ class Slider {
   }
 
   _handleSlideClick(e) {
-    this.events.onSlideClick(e, {
+    this.on.slideClick(e, {
       index: this.active,
       el: this.slides[this.active]
     })
@@ -569,20 +570,20 @@ class Slider {
 
     switch (this.changedBy) {
       case "button": {
-        this.events.onSlideChangeFromButton(changeEventObject)
+        this.on.slideChangeFromButton(changeEventObject)
         break
       }
       case "dot": {
-        this.events.onSlideChangeFromDot(changeEventObject)
+        this.on.slideChangeFromDot(changeEventObject)
         break
       }
       case "drag": {
-        this.events.onSlideChangeFromDrag(changeEventObject)
+        this.on.slideChangeFromDrag(changeEventObject)
         break
       }
     }
 
-    this.events.onSlideChange({
+    this.on.slideChange({
       ...changeEventObject,
       ...(this.changedBy && { by: this.changedBy })
     })
@@ -808,7 +809,7 @@ class Slider {
    */
 
   onDragStart(callback) {
-    this.events.onDragStart = callback
+    this.on.dragStart = callback
   }
 
   /**
@@ -825,7 +826,7 @@ class Slider {
    */
 
   onDragEnd(callback) {
-    this.events.onDragEnd = callback
+    this.on.dragEnd = callback
   }
 
   /**
@@ -840,7 +841,7 @@ class Slider {
    */
 
   onSlideClick(callback) {
-    this.events.onSlideClick = callback
+    this.on.slideClick = callback
   }
 
   /**
@@ -859,19 +860,19 @@ class Slider {
 
   onSlideChange(location, callback) {
     if (!callback) {
-      this.events.onSlideChange = location
+      this.on.slideChange = location
     } else {
       switch (location) {
         case "button": {
-          this.events.onSlideChangeFromButton = callback
+          this.on.slideChangeFromButton = callback
           break
         }
         case "dot": {
-          this.events.onSlideChangeFromDot = callback
+          this.on.slideChangeFromDot = callback
           break
         }
         case "drag": {
-          this.events.onSlideChangeFromDrag = callback
+          this.on.slideChangeFromDrag = callback
           break
         }
       }
