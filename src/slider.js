@@ -130,8 +130,7 @@ function setStyle(el, property, value, unit) {
   apply(el, property, value, unit)
 }
 
-function noop() {}
-
+const noop = () => {}
 const minDiff = (a, b, v) => Math.abs(a - b) > v && Math.abs(b - a) > v
 const isNil = (v) => v === undefined || v === null
 const isFunc = (v) => Object.prototype.toString.call(v) == "[object Function]"
@@ -148,9 +147,8 @@ const makeEl = (template) => {
   wrap.innerHTML = template
   return wrap.firstChild
 }
-function mergeDeep(...objects) {
-  const isObject = (obj) => obj && typeof obj === "object"
-
+const isObject = (obj) => obj && typeof obj === "object"
+const mergeDeep = (...objects) => {
   return objects.reduce((prev, obj) => {
     Object.keys(obj).forEach((key) => {
       const pVal = prev[key]
@@ -171,14 +169,14 @@ function mergeDeep(...objects) {
 
 /*----------  Main Slider Class  ----------*/
 
-// configuration
-// TODO: implement
-
 // TODO: move the class name settings to the configuration
 // TODO: implement config.class setting
 // const SLIDER_CLASS = "slider"
 // const DOTS_CLASS = "slider-dots"
 // const DOT_CLASS = "slider-dot"
+
+// Minimum amount of pixels to drag before a slide changes
+const MIN_DRAG = 75
 
 export const DEFAULTS = {
   width: null,
@@ -195,7 +193,7 @@ export const DEFAULTS = {
 }
 
 class Slider {
-  constructor(id, options, element) {
+  constructor(id, options = {}, element) {
     this.config = {
       enabled: true,
       width: DEFAULTS.width,
@@ -207,7 +205,6 @@ class Slider {
       // TODO
       // vertical: true,
       transition: { time: 0.3, mode: "ease" },
-      // TODO
       style: {
         root: DEFAULTS.style.root,
         buttons: DEFAULTS.style.buttons,
@@ -218,8 +215,6 @@ class Slider {
         buttons: ""
       }
     }
-
-    // Object.assign(this.config, options)
 
     this.config = mergeDeep(this.config, options)
 
@@ -369,7 +364,7 @@ class Slider {
     this.wrap.addEventListener("mousedown", (e) => this._handleDragStart(e))
     this.wrap.addEventListener("mousemove", (e) => this._handleDragMove(e))
     this.wrap.addEventListener("mouseup", (e) => this._handleDragEnd(e))
-    // this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
+    this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
 
     for (const slide of this.slides) {
       slide.addEventListener("click", (e) => this._handleSlideClick(e))
@@ -402,7 +397,7 @@ class Slider {
 
     const dragEnd = this._currentDragPos(e)
 
-    if (minDiff(this.dragStart, dragEnd, 15)) {
+    if (minDiff(this.dragStart, dragEnd, MIN_DRAG)) {
       this.changedBy = "drag"
 
       if (this.dragStart < dragEnd) {
@@ -417,18 +412,16 @@ class Slider {
         toIndex: this.active,
         toEl: this.slides[this.active]
       })
+    } else {
+      this._set(this.active)
     }
   }
 
   _handleDragMove(e) {
-    // TODO: if mouse leaves the slider element, stop dragging
     if (this.dragging) {
       const pos = this._currentDragPos(e)
-
-      if (minDiff(this.dragStart, pos, 15)) {
-        const move = this.dragStart - pos
-        setStyle(this.wrap, "left", this.fromLeft + move * -1, "px")
-      }
+      const move = this.dragStart - pos
+      setStyle(this.wrap, "left", this.fromLeft + move * -1, "px")
     }
   }
 
@@ -439,10 +432,12 @@ class Slider {
     })
   }
 
-  // _handleMouseLeave(e) {
-  //   this.dragging = false
-  //   this._handleDragEnd(e)
-  // }
+  _handleMouseLeave(e) {
+    if (this.dragging) {
+      this.dragging = false
+      this._handleDragEnd(e)
+    }
+  }
 
   // During recalculation, clear all dynamic styling
   _calculateWrapperStyle() {
