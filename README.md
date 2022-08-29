@@ -27,7 +27,7 @@ const slider = new Slider("#slider", {
 
 And you're good to go 👍. Out of the box the slider comes with a few methods and some more settings. Check out the **API** section for more details.
 
-# The 'Buzzcut approach'
+## The 'Buzzcut approach'
 
 Hate writing javascript? Tell which linux distro you use while you're at it boss. You can also tag the slider element with an attribute `slider="<your_slider_id>"` or just `slider`. Note: if you don't specify the id, the slider will generate it for you. But you won't know it lol.
 
@@ -64,11 +64,11 @@ next()
 
 ---
 
-# API
+## API
 
 This api section will contain examples and some will also be split into two parts. Each explaining the normal and buzzcut approach. Rule of thumb, if a callback function contains more than 1 parameter, it will use destructuring, instead of multiple parameters.
 
-## Options
+### Options
 
 Given the simplicity, the slider class offers a pretty solid amount of customization. The following are all the available options with default values.
 
@@ -137,7 +137,7 @@ const slider = new Slider("#my-slider", {
 })
 ```
 
-## Option events
+### Option events
 
 There are 3 ways to register an event listener in the slider.
 
@@ -145,7 +145,7 @@ There are 3 ways to register an event listener in the slider.
 - We can use the returned slider instance
 - We can use the buzzcut shorthand, all buzzcut methods are prefixed with "on"
 
-### `onDragStart`, `onDragEnd`
+#### `onDragStart`, `onDragEnd`
 
 Events fired when dragging starts and ends
 
@@ -168,7 +168,7 @@ slider.onDragStart(event, { fromIndex, fromEl }) {}
 onDragStart("my-slider", (event, { fromIndex, fromEl }) => {})
 ```
 
-### `onSlideClick`
+#### `onSlideClick`
 
 Fired whenever user clicks (and doesn't drag) on a slide.
 
@@ -189,7 +189,7 @@ const slider = new Slider("#sldier", {
 onSlideClick("my-slider", (event, { index, el }) => {})
 ```
 
-### `onSlideChangeFromDot`, `onSlideChangeFromButton`, `onSlideChangeFromDrag`
+#### `onSlideChangeFromDot`, `onSlideChangeFromButton`, `onSlideChangeFromDrag`
 
 Fired whenever a slide is changed from one of the listed events.
 
@@ -217,11 +217,11 @@ onSlideChangeFromDrag(
 
 ---
 
-## Slider navigation methods
+### Slider navigation methods
 
 These methods help you better manipulate the slider and control it from outside so to say.
 
-### `next(n)`, `prev(n)`
+#### `next(n)`, `prev(n)`
 
 Simple methods to set a new active slide by moving left or right.
 
@@ -237,7 +237,7 @@ slider.next(2)
 next("my_slider")
 ```
 
-### `set(n)`
+#### `set(n)`
 
 A powerful method to set the currently active slide. Accepts an index or a function as a parameter.
 
@@ -272,9 +272,9 @@ set("my_slider", ({ index }) => index + 1)
 
 ---
 
-## Slider manipulation methods
+### Slider manipulation methods
 
-### `add(template, index)`
+#### `add(template, index)`
 
 Allows you to insert a new slide into the slider without reloading. You can do so in 3 ways. Use a template string, insert a HTMLElement or use a callback function.
 
@@ -329,7 +329,7 @@ add("my_slider", ({ total }) => {
 })
 ```
 
-### `remove(index)`
+#### `remove(index)`
 
 Removes a slide at the given index. If no index is provided, removes the first available slide.
 
@@ -365,7 +365,7 @@ slider.remove((ctx) => {
 remove("my_slider", ({ index }) => index)
 ```
 
-### `disable()`, `enable()`, `toggle()`
+#### `disable()`, `enable()`, `toggle()`
 
 Controls wether the slider can be interacted with.
 
@@ -375,12 +375,12 @@ Controls wether the slider can be interacted with.
 
 ---
 
-## Experimental / Planned API
+### Experimental / Planned API
 
-### [Experimental] `reverse()`
+#### `reverse()`
 
 Swaps the order of all slides. Effectively reversing it.
 
-### [Experimental] `confi()`
+#### `config()`
 
 Updates slider configuration without completely refreshing it. Meaning it keep any appended slides or other changes made after its initialization.
