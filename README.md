@@ -98,6 +98,8 @@ const slider = new Slider("#my-slider", {
   buttons: true,
   // If set to true, slider will working top to bottom
   vertical: false,
+  // If true, users will be able to change slides by pressing arrow left and right
+  arrows: false,
   // Update the CSS transition object
   transition: { time: 0.3, mode: "ease" },
   // Controls which parts of the slider come with pre-made styling

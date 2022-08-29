@@ -180,6 +180,7 @@ export const DEFAULTS = {
   buttons: true,
   transition: { time: 0.3, mode: "ease" },
   vertical: false,
+  arrows: false,
   style: {
     root: true,
     buttons: true,
@@ -356,11 +357,15 @@ class Slider {
       this.root.appendChild(this.right)
     }
 
-    // Handle dragging
+    // Handle events
     this.wrap.addEventListener("mousedown", (e) => this._handleDragStart(e))
     this.wrap.addEventListener("mousemove", (e) => this._handleDragMove(e))
     this.wrap.addEventListener("mouseup", (e) => this._handleDragEnd(e))
     this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
+
+    if (this.config.arrows) {
+      window.addEventListener("keydown", (e) => this._handleKeyPress(e))
+    }
 
     for (const slide of this.slides) {
       slide.classList.add(this.config.class.slide)
@@ -372,6 +377,13 @@ class Slider {
 
     // When this is true, slider is usable
     this.ready = true
+  }
+
+  _handleKeyPress({ key }) {
+    if (this.config.enabled) {
+      if (key == "ArrowLeft") this.prev()
+      if (key == "ArrowRight") this.next()
+    }
   }
 
   _currentDragPos(e) {
@@ -594,7 +606,7 @@ class Slider {
    * Goes to the next slide unless it's the last slide
    *
    * @public
-   * @param {Number} by specifies how many slides to jump, default is 1
+   * @param {number} by specifies how many slides to jump, default is 1
    */
   next(by = 1) {
     this._set(this.active + by)
@@ -604,7 +616,7 @@ class Slider {
    * Goes to the previous slide unless it's the first slide
    *
    * @public
-   * @param {Number} by specifies how many slides to jump, default is 1
+   * @param {number} by specifies how many slides to jump, default is 1
    */
   prev(by = 1) {
     this._set(this.active - by)
@@ -647,7 +659,7 @@ class Slider {
   /**
    * Appends a slide to the slider.
    *
-   * @param {Function | string | HTMLElement} slide
+   * @param {function | string | HTMLElement} slide
    * @param {number} index at which index to insert the new slide
    *
    * Following examples will demonstarted the ways the function can be used in
@@ -716,7 +728,7 @@ class Slider {
   /**
    * Removes a slide at the given index from the slider
    *
-   * @param {*} index
+   * @param {number} index
    */
 
   remove(index) {
@@ -797,7 +809,7 @@ class Slider {
    * - `fromIndex` Number of the slide the draggging began on
    * - `fromEl` Slide element which the dragging began on
    *
-   * @param {Function} callback
+   * @param {function} callback
    *
    */
 
@@ -815,7 +827,7 @@ class Slider {
    * - `toIndex` Number of the slide the dragging stopped on
    * - `toEl` Slide element which dragging stopped on
    *
-   * @param {Function} callback
+   * @param {function} callback
    */
 
   onDragEnd(callback) {
@@ -830,7 +842,7 @@ class Slider {
    * - `index` Number of the clicked slide
    * - `el` Clicked slide element
    *
-   * @param {Function} callback
+   * @param {function} callback
    */
 
   onSlideClick(callback) {
@@ -848,7 +860,7 @@ class Slider {
    * - `toEl` Slide element which dragging stopped on
    *
    * @param {button | dot | drag} location Specify which event to watch for
-   * @param {Function} callback
+   * @param {function} callback
    */
 
   onSlideChange(location, callback) {
