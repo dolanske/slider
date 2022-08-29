@@ -20,6 +20,10 @@
       .slide {
         background-color: rgb(64, 64, 64);
       }
+
+      #THE-WRAPPER {
+        height: 500px;
+      }
     </style>
   </head>
   <body>
@@ -30,20 +34,22 @@
       <div class="slide"><h2>Slide 4</h2></div>
     </div>
 
-    <div>
-      <button id="next">NEXT</button>
-    </div>
+    <div id="THE-WRAPPER"></div>
   </body>
 
   <script type="module">
     import Slider from "./index.js"
 
-    const slider = new Slider("#slider", {
-      on: {
-        slideChange: (e) => {
-          console.log(e)
+    const slider = new Slider(
+      "#slider",
+      {
+        on: {
+          // slideChange: (e) => {
+          //   console.log(e)
+          // }
         }
-      }
-    })
+      },
+      "#THE-WRAPPER"
+    )
   </script>
 </html>

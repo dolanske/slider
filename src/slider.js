@@ -130,7 +130,6 @@ function setStyle(el, property, value, unit) {
   apply(el, property, value, unit)
 }
 
-const noop = () => {}
 const minDiff = (a, b, v) => Math.abs(a - b) > v && Math.abs(b - a) > v
 const isNil = (v) => v === undefined || v === null
 const isFunc = (v) => Object.prototype.toString.call(v) == "[object Function]"
@@ -142,14 +141,14 @@ const isEl = (v) =>
       v !== null &&
       v.nodeType === 1 &&
       typeof v.nodeName === "string"
-const makeEl = (template) => {
-  const wrap = document.createElement("div")
-  wrap.innerHTML = template
-  return wrap.firstChild
+const makeEl = (t) => {
+  const w = document.createElement("div")
+  w.innerHTML = t
+  return w.firstChild
 }
-const isObject = (obj) => obj && typeof obj === "object"
-const mergeDeep = (...objects) => {
-  return objects.reduce((prev, obj) => {
+const isObject = (o) => o && typeof o === "object"
+const mergeDeep = (...items) => {
+  return items.reduce((prev, obj) => {
     Object.keys(obj).forEach((key) => {
       const pVal = prev[key]
       const oVal = obj[key]
@@ -193,7 +192,13 @@ export const DEFAULTS = {
 }
 
 class Slider {
-  constructor(id, options = {}, element) {
+  /**
+   *
+   * @param {String} id Query selector for slider elements
+   * @param {Object} options Slider options (see documentation)
+   * @param {string | Element} mountTo Optional element to mount the slider to
+   */
+  constructor(id, options = {}, mountTo) {
     this.config = {
       enabled: true,
       width: DEFAULTS.width,
@@ -211,27 +216,26 @@ class Slider {
         dots: DEFAULTS.style.dots
       },
       custom: {
-        dots: "",
-        buttons: ""
+        dots: null,
+        buttons: null
       }
     }
 
     this.on = {
-      dragStart: noop,
-      dragEnd: noop,
-      slideClick: noop,
-      slideChange: noop,
-      slideChangeFromButton: noop,
-      slideChangeFromDot: noop,
-      slideChangeFromDrag: noop
+      dragStart: () => {},
+      dragEnd: () => {},
+      slideClick: () => {},
+      slideChange: () => {},
+      slideChangeFromButton: () => {},
+      slideChangeFromDot: () => {},
+      slideChangeFromDrag: () => {}
     }
-
     this.config = mergeDeep(this.config, options)
     this.on = Object.assign(this.on, options?.on ?? {})
-
     this.ready = false
     this.id = id
-    this.root = element ?? null
+    this.root = null
+    this.mountTo = document.querySelector(mountTo)
     this.wrap = null
     this.slides = null
     this.dots = null
@@ -240,14 +244,11 @@ class Slider {
     this.dragging = false
     this.dragStart = 0
     this.fromLeft = 0
-
     this.changedBy = ""
-
     this.left = {
       el: document.createElement("button"),
       by: 1
     }
-
     this.right = {
       el: document.createElement("button"),
       by: 1
@@ -263,8 +264,6 @@ class Slider {
       this.right.el.innerHTML = iconright
     }
 
-    this.dots = null
-
     this._init()
   }
 
@@ -272,6 +271,11 @@ class Slider {
 
   _init() {
     this.root = this.root || document.querySelector(this.id)
+
+    // If mount to element is provided, "teleport" the slider there
+    if (this.mountTo) {
+      this.mountTo.appendChild(this.root)
+    }
 
     // Append
     if (!this.config.disableStyle) {
@@ -344,7 +348,9 @@ class Slider {
 
     this._calculateWrapperStyle()
 
+    // Button configuration
     if (this.config.buttons) {
+      // Add a unique ID for styling purposes
       this.left.el.setAttribute("id", "slider-button-left")
       this.right.el.setAttribute("id", "slider-button-right")
 
@@ -373,6 +379,8 @@ class Slider {
 
     this._generateDots()
     this._updateNav(this.active)
+
+    // When this is true, slider is usable
     this.ready = true
   }
 
