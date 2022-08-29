@@ -234,7 +234,6 @@ class Slider {
     this.changedBy = ""
     this.left = document.createElement("button")
     this.right = document.createElement("button")
-
     this.mountTo =
       typeof this.mountTo === "string"
         ? document.querySelector(this.mountTo)
@@ -538,14 +537,16 @@ class Slider {
   }
 
   _updateNav(index) {
-    if (index + 1 === this.slides.length) {
-      this.right.setAttribute("disabled", true)
-    } else if (index === 0) {
+    if (index === 0) {
       this.left.setAttribute("disabled", true)
     } else {
-      // Enable again
-      this.right.removeAttribute("disabled")
       this.left.removeAttribute("disabled")
+    }
+
+    if (index === this.slides.length - 1) {
+      this.right.setAttribute("disabled", true)
+    } else {
+      this.right.removeAttribute("disabled")
     }
 
     if (this.config.dots) {

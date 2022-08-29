@@ -9,7 +9,6 @@
 - [ ] [Improvement] Before slide completes initialization, should hide it or something to prevent blinking
 - [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
-- [ ] [Bug] Arrows are disabled when only 2 slides are available
 
 ## Done
 
@@ -19,6 +18,7 @@
 - [x] [Bug] Sometimes during dragging it skips multiple slides
 - [x] [Slider] Add event listener for arrow keys (don't propagate outside of root)
 - [x] [Slider] Implement .reverse() method which swaps all slides
+- [x] [Bug] Arrows are disabled when only 2 slides are available
 
 ---
 
