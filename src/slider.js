@@ -232,14 +232,8 @@ class Slider {
     this.dragStart = 0
     this.fromLeft = 0
     this.changedBy = ""
-    this.left = {
-      el: document.createElement("button"),
-      by: 1
-    }
-    this.right = {
-      el: document.createElement("button"),
-      by: 1
-    }
+    this.left = document.createElement("button")
+    this.right = document.createElement("button")
 
     this._init()
   }
@@ -282,11 +276,11 @@ class Slider {
     const custom = this.config.custom.buttons
 
     if (custom) {
-      this.left.el = typeof custom === "string" ? makeEl(custom) : custom
-      this.right.el = typeof custom === "string" ? makeEl(custom) : custom
+      this.left = typeof custom === "string" ? makeEl(custom) : custom
+      this.right = typeof custom === "string" ? makeEl(custom) : custom
     } else {
-      this.left.el.innerHTML = iconLeft
-      this.right.el.innerHTML = iconright
+      this.left.innerHTML = iconLeft
+      this.right.innerHTML = iconright
     }
 
     // Wrap inner children in a new element which will handle touch screens
@@ -339,27 +333,27 @@ class Slider {
     // Button configuration
     if (this.config.buttons) {
       // Append class names
-      this.left.el.classList.add(this.config.class.buttons)
-      this.right.el.classList.add(this.config.class.buttons)
+      this.left.classList.add(this.config.class.buttons)
+      this.right.classList.add(this.config.class.buttons)
 
-      this.left.el.classList.add(this.config.class.buttonLeft)
-      this.right.el.classList.add(this.config.class.buttonRight)
+      this.left.classList.add(this.config.class.buttonLeft)
+      this.right.classList.add(this.config.class.buttonRight)
 
       // Add a unique ID for styling purposes
-      this.left.el.setAttribute("id", "slider-button-left")
-      this.right.el.setAttribute("id", "slider-button-right")
+      this.left.setAttribute("id", "slider-button-left")
+      this.right.setAttribute("id", "slider-button-right")
 
-      this.left.el.addEventListener("click", () => {
+      this.left.addEventListener("click", () => {
         this.changedBy = "button"
-        this.prev(this.left.by)
+        this.prev(1)
       })
-      this.right.el.addEventListener("click", () => {
+      this.right.addEventListener("click", () => {
         this.changedBy = "button"
-        this.next(this.right.by)
+        this.next(1)
       })
 
-      this.root.appendChild(this.left.el)
-      this.root.appendChild(this.right.el)
+      this.root.appendChild(this.left)
+      this.root.appendChild(this.right)
     }
 
     // Handle dragging
@@ -522,13 +516,13 @@ class Slider {
 
   _updateNav(index) {
     if (index + 1 === this.slides.length) {
-      this.right.el.setAttribute("disabled", true)
+      this.right.setAttribute("disabled", true)
     } else if (index === 0) {
-      this.left.el.setAttribute("disabled", true)
+      this.left.setAttribute("disabled", true)
     } else {
       // Enable again
-      this.right.el.removeAttribute("disabled")
-      this.left.el.removeAttribute("disabled")
+      this.right.removeAttribute("disabled")
+      this.left.removeAttribute("disabled")
     }
 
     if (this.config.dots) {
