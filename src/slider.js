@@ -478,7 +478,7 @@ class Slider {
       this.wrap,
       "width",
       this.rootWidth * this.slides.length +
-        this.slides.length * this.config.gap,
+        (this.slides.length - 1) * this.config.gap,
       "px"
     )
 
@@ -797,7 +797,14 @@ class Slider {
 
   config(conf) {}
 
-  reverse() {}
+  /**
+   * Reverses the order of all sliders
+   */
+
+  reverse() {
+    this.wrap.style.flexDirection =
+      this.wrap.style.flexDirection === "row-reverse" ? "row" : "row-reverse"
+  }
 
   /*----------  Events  ----------*/
 

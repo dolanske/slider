@@ -1,6 +1,5 @@
 # TODO
 
-- [ ] [Slider] Implement .swap() method which swaps all slides
 - [ ] [Slider] Implement .config() method which updates slider without reloading it (keeping appened elements etc)
 - [ ] [Slider] Implement vertical slider
 - [ ] [Slider] Add option to add border radius to the entire slider
@@ -17,8 +16,11 @@
 - [x] [Defaults] Complete the defaults object
 - [x] [Bug] Sometimes during dragging it skips multiple slides
 - [x] [Slider] Add event listener for arrow keys (don't propagate outside of root)
+- [x] [Slider] Implement .reverse() method which swaps all slides
 
 ---
+
+## Finalization
 
 - [ ] [Ship] Make a minimized dist file
 - [ ] [Ship] Make project public, create a release 1.0.0

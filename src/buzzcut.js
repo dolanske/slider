@@ -120,6 +120,13 @@ export function enable(id) {
   slider.enable()
 }
 
+export function reverse(id) {
+  const slider = get(id)
+  if (!slider) invalidUse(id, "reverse()")
+
+  slider.reverse()
+}
+
 export function toggle(id) {
   const slider = get(id)
   if (!slider) invalidUse(id, "toggle()")

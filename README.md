@@ -375,13 +375,20 @@ Controls wether the slider can be interacted with.
 - `enable()` makes the slider interactable again
 - `toggle()` toggles between enabled / disabled state
 
+#### `reverse()`
+
+Reverses the order of slides within the slider.
+
+```js
+slider.reverse()
+
+// Buzzcut
+reverse("my_slider")
+```
+
 ---
 
 ### Experimental / Planned API
-
-#### `reverse()`
-
-Swaps the order of all slides. Effectively reversing it.
 
 #### `config()`
 

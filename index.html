@@ -31,11 +31,17 @@
       <div><h2>Slide 4</h2></div>
     </div>
 
-    <div id="THE-WRAPPER"></div>
+    <button id="action">Reverse</button>
   </body>
 
   <script type="module">
     import Slider from "./index.js"
+
     const slider = new Slider("#slider")
+
+    const action = document.querySelector("#action")
+    action.addEventListener("click", () => {
+      slider.reverse()
+    })
   </script>
 </html>
