@@ -9,6 +9,7 @@ const iconright =
 
 const rootCSS = /* CSS */ `
   .slider {
+    border-radius: 8px;
     display: block;
     width: 100%;
     height: 100%;
@@ -22,6 +23,11 @@ const rootCSS = /* CSS */ `
     bottom: 0;
     left: 0;
     display: flex;
+  }
+
+  .slide {
+    border-radius: 8px;
+    background-color: #eaeaea;
   }
   
   .slider-disable-transition {
@@ -47,20 +53,20 @@ const dotsCSS = /* CSS */ `
   .slider-dots .slider-dot {
     transition: 0.1s all ease-in-out;
     display: block;
-    width: 12px !important;
-    height: 12px !important;
+    width: 11px !important;
+    height: 11px !important;
     border: none;
     cursor: pointer;
-    border-radius: 100%;
-    background-color: rgb(100, 100, 100);
+    border-radius: 50%;
+    background-color: rgb(210, 210, 210);
   }
 
   .slider-dots .slider-dot:hover {
-    background-color: rgb(175, 175, 175);
+    background-color: rgb(185, 185, 185);
   }
 
   .slider-dots .slider-dot.active {
-    background-color: #a78df5;
+    background-color: SlateBlue;
   }
 `
 
@@ -79,19 +85,25 @@ const buttonsCSS = /* CSS */ `
     width: 48px;
     height: 48px;
     left: 8px;
-    background-color: rgb(175, 175, 175);
+    background-color: rgb(210, 210, 210);
     z-index: 10;
     cursor: pointer;
   }
   
   #slider-button-left:hover,
   #slider-button-right:hover {
-    background-color: rgb(225, 225, 225);
+    background-color: rgb(185, 185, 185);
   }
   
   #slider-button-left:disabled,
   #slider-button-right:disabled {
-    background-color: rgb(100, 100, 100);
+    background-color: rgb(235, 235, 235);
+    pointer-events: none;
+  }
+
+  #slider-button-left:disabled svg,
+  #slider-button-right:disabled svg {
+    fill: darkgray;
     pointer-events: none;
   }
   
@@ -100,6 +112,7 @@ const buttonsCSS = /* CSS */ `
     width: 18px;
     height: 18px;
     pointer-events: none;
+    fill: black;
   }
   
   #slider-button-right {
@@ -266,6 +279,8 @@ class Slider {
       if (!styleEl) {
         const style = document.createElement("style")
         style.id = "slider-style-element"
+
+        // TODO: Add border
 
         if (this.config.style.root)
           style.appendChild(document.createTextNode(rootCSS))
@@ -807,7 +822,11 @@ class Slider {
     }
   }
 
-  config(conf) {}
+  config(conf) {
+    console.warn(
+      "[Experimental] This function is not implemented yet. Hello world?"
+    )
+  }
 
   /**
    * Reverses the order of all sliders

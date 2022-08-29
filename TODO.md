@@ -5,10 +5,11 @@
 - [ ] [Slider] Add option to add border radius to the entire slider
 - [ ] [Slider] Implement calculation of showing multiple slides in 1 "slide"
 - [ ] [Slider] Test every method
-- [ ] [Defaults] Tweak default CSS
+
 - [ ] [Improvement] Before slide completes initialization, should hide it or something to prevent blinking
 - [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
+- [ ] [Slider] Convert style constants into a function which allows overriding values (essentially a deep merge) + use class names from DEFAULTS and not hardcoded ones. Remove border-radius from default styles and only append if it DEFAULTS.rounded has a value
 
 ## Done
 
@@ -19,6 +20,7 @@
 - [x] [Slider] Add event listener for arrow keys (don't propagate outside of root)
 - [x] [Slider] Implement .reverse() method which swaps all slides
 - [x] [Bug] Arrows are disabled when only 2 slides are available
+- [x] [Defaults] Tweak default CSS
 
 ---
 
