@@ -58,7 +58,9 @@ import { next, prev } from "./slider.js"
 next("my-sldier")
 next("my-other-slider")
 
-// If you call this method without id, it will be applied to the first slider it finds in the dom or you'll get a warning that slider was no found
+// If you call this method without id,
+// it will be applied to the first slider it finds in the dom or
+// you'll get a warning that slider was no found
 next()
 ```
 
@@ -110,7 +112,8 @@ const slider = new Slider("#my-slider", {
     root: true
   },
   // Add custom classes to slider elements
-  // Because the wrapper + slides are initiated in HTML, you can only add custom class to the generated elements
+  // Because the wrapper + slides are initiated in HTML,
+  // you can only add custom class to the generated elements
   class: {
     slider: "slider",
     slide: "slide",
@@ -191,7 +194,7 @@ const slider = new Slider("#sldier", {
 onSlideClick("my-slider", (event, { index, el }) => {})
 ```
 
-#### `onSlideChangeFromDot`, `onSlideChangeFromButton`, `onSlideChangeFromDrag`
+#### `onSlideChange` ,`onSlideChangeFromDot`, `onSlideChangeFromButton`, `onSlideChangeFromDrag`
 
 Fired whenever a slide is changed from one of the listed events.
 
@@ -206,6 +209,8 @@ Parameters:
 ```js
 const slider = new Slider("#sldier", {
   on: {
+    // Called whenever a slide is changed
+    onSlideChange() {}
     slideChangeFromDot(event, { fromIndex, fromEl, toIndex, toEl }) {}
   }
 })
@@ -320,8 +325,10 @@ slider.add((ctx) => {
   // The slide will be appended after the last slide
   return slide
 
-  // Or return an array which at index 0 has the slide and index 1 has the index of where to place the new slide
-  // This means that the new slide will be placed to the right of the currently active slide
+  // Or return an array which at index 0 has the slide
+  // and index 1 has the location of where to place the new slide.
+  // This means that the new slide will be placed
+  // to the right of the currently active slide.
   return [slide, ctx.index + 1]
 })
 
