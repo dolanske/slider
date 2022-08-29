@@ -8,9 +8,9 @@ Start by preparing your HTML.
 
 ```html
 <div id="slider">
-  <div class="slide"><h2>Hello Slide 1</h2></div>
-  <div class="slide"><h2>Hello Slide 2</h2></div>
-  <div class="slide"><h2>No hello to you slide 3</h2></div>
+  <div><h2>Hello Slide 1</h2></div>
+  <div><h2>Hello Slide 2</h2></div>
+  <div><h2>No hello to you slide 3</h2></div>
 </div>
 ```
 
@@ -37,16 +37,16 @@ Let's check out an example:
 
 ```html
 <div slider="my-slider" slider-width="728" slider-height="480">
-  <div class="slide"><h2>Hello Slide 1</h2></div>
-  <div class="slide"><h2>Hello Slide 2</h2></div>
+  <div><h2>Hello Slide 1</h2></div>
+  <div><h2>Hello Slide 2</h2></div>
 </div>
 ```
 
 ```js
 import { register } from "./slider.js"
 
-// Either use this or import the register method before closing the </body> tag
-document.addEventListener("DOMContentLoaded", () => register())
+// Sliders will be registered when DOM is loaded so it does not matter where you call this function
+register()
 ```
 
 After your DOM is loaded, make sure you import the `register()` method and run it. All it does is collect all the sliders you've prepared and initializes them.
@@ -70,9 +70,12 @@ This api section will contain examples and some will also be split into two part
 
 ## Options
 
-Given the simplicity, the slider class offers a pretty solide amount of customization. The following are all the available options with default values.
+Given the simplicity, the slider class offers a pretty solid amount of customization. The following are all the available options with default values.
 
 ```js
+
+// These are the available slider options and their default values
+
 const slider = new Slider("#my-slider", {
   // Controls if user can interact with the slider
   enabled: true,
@@ -88,7 +91,7 @@ const slider = new Slider("#my-slider", {
   dots: true,
   // Enables / disables left and right control buttons
   buttons: true,
-  // Can be set to either 'row' or 'column;
+  // If set to true, slider will working top to bottom
   vertical: false,
   // Update the CSS transition object
   transition: { time: 0.3, mode: "ease" },
@@ -102,18 +105,19 @@ const slider = new Slider("#my-slider", {
   // Add custom classes to slider elements
   // Because the wrapper + slides are initiated in HTML, you can only add custom class to the generated elements
   class: {
-    buttons: null, // Both nav buttons
-    buttonLeft: null, // Only left button
-    buttonRight: null, // Only right button
-    dots: null,  // Wrapper for dots
-    dot: null // Each dot
+    slider: "slider",
+    slide: "slide",
+    dots: "slider-dots",
+    dot: "slider-dot",
+    buttons: "slider-button",
+    buttonLeft: "slider-button-left",
+    buttonRight: "slider-button-right"
   }
-
   // Replace the navigation elements with your own
   // Accepts a template string or a HTMLElement
   custom: {
-    dots: "",
-    buttons: ""
+    dots: null,
+    buttons: null
   },
   // Callback functions called when these events occur
   on: {
@@ -125,10 +129,16 @@ const slider = new Slider("#my-slider", {
     slideChangeFromButton: null,
     slideChangeFromDrag: null
   }
-})
+}, "#element-to-mount-to")
 ```
 
 ## Option events
+
+There are 3 ways to register an event listener in the slider.
+
+- We can use the on object when registering a new slider
+- We can use the returned slider instance
+- We can use the buzzcut shorthand, all buzzcut methods are prefixed with "on"
 
 ### `onDragStart`, `onDragEnd`
 
@@ -146,6 +156,8 @@ const slider = new Slider("#sldier", {
     dragStart(event, { fromIndex, fromEl }) {}
   }
 })
+
+slider.onDragStart(event, { fromIndex, fromEl }) {}
 
 // Buzzcut
 onDragStart("my-slider", (event, { fromIndex, fromEl }) => {})
@@ -204,7 +216,7 @@ onSlideChangeFromDrag(
 
 These methods help you better manipulate the slider and control it from outside so to say.
 
-### `next()`, `prev()`
+### `next(n)`, `prev(n)`
 
 Simple methods to set a new active slide by moving left or right.
 
@@ -220,7 +232,7 @@ slider.next(2)
 next("my_slider")
 ```
 
-### `set()`
+### `set(n)`
 
 A powerful method to set the currently active slide. Accepts an index or a function as a parameter.
 
@@ -257,11 +269,11 @@ set("my_slider", ({ index }) => index + 1)
 
 ## Slider manipulation methods
 
-### `add()`
+### `add(template, index)`
 
 Allows you to insert a new slide into the slider without reloading. You can do so in 3 ways. Use a template string, insert a HTMLElement or use a callback function.
 
-**Option A, Use a template string**
+**Option A, Use an element or a template string**
 
 Parameters:
 
@@ -272,8 +284,98 @@ Parameters:
 // Adds a new slide at index 3
 slider.add('<div class="slide">New Slide!</slide>', 3)
 
+// Add a new slide element
+const slide = document.createElement("div")
+slide.innerHTML = "New Slide!"
+
 // Buzzcut
-add("my_slider", '<div class="slide">New Slide!</slide>', 3)
+add("my_slider", slide, 3)
 ```
 
-**Option B, Use an element**
+**Option B, Use a method**
+
+Parameters:
+
+- `callback` function which returns template string or element, callback exposes
+  - `total` which is total amount of slides
+  - `index` which is the index of the active slide
+  - `last` index of the last slide
+- `index` {Number} (optional) index of insertion
+
+```js
+// Normal usage
+
+slider.add((ctx) => {
+  const slide = document.createElement("div")
+  slide.innerHTML = "NEW SLIDE!!"
+
+  // You can either return just the element itself
+  // The slide will be appended after the last slide
+  return slide
+
+  // Or return an array which at index 0 has the slide and index 1 has the index of where to place the new slide
+  // This means that the new slide will be placed to the right of the currently active slide
+  return [slide, ctx.index + 1]
+})
+
+add("my_slider", ({ total }) => {
+  // Append a new slide in the middle of the slider
+  return [`<div>NEW SLIDE!!</div>` Math.round(total / 2)]
+})
+```
+
+### `remove(index)`
+
+Removes a slide at the given index. If no index is provided, removes the first available slide.
+
+**Option A, use an index**
+
+Parameters
+
+- `index` index of the slide you want to remove, default is `0`
+
+```js
+slider.remove(2)
+
+// Buzzcut
+remove("my_slider", 2)
+```
+
+**Option B, use a callback**
+
+Parameters:
+
+- `callback` function which returns template string or element, callback exposes
+  - `total` which is total amount of slides
+  - `index` which is the index of the active slide
+  - `last` index of the last slide
+
+```js
+slider.remove((ctx) => {
+  // Remove second to last slider
+  return ctx.last - 2
+})
+
+// Buzzcut, removes the currently active slide
+remove("my_slider", ({ index }) => index)
+```
+
+### `disable()`, `enable()`, `toggle()`
+
+Controls wether the slider can be interacted with.
+
+- `disable()` makes the slider unresponsive to user interaction
+- `enable()` makes the slider interactable again
+- `toggle()` toggles between enabled / disabled state
+
+---
+
+## Experimental / Planned API
+
+### [Experimental] `reverse()`
+
+Swaps the order of all slides. Effectively reversing it.
+
+### [Experimental] `confi()`
+
+Updates slider configuration without completely refreshing it. Meaning it keep any appended slides or other changes made after its initialization.

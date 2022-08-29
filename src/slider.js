@@ -168,26 +168,35 @@ const mergeDeep = (...items) => {
 
 /*----------  Main Slider Class  ----------*/
 
-// TODO: move the class name settings to the configuration
-// TODO: implement config.class setting
-// const SLIDER_CLASS = "slider"
-// const DOTS_CLASS = "slider-dots"
-// const DOT_CLASS = "slider-dot"
-
 // Minimum amount of pixels to drag before a slide changes
 const MIN_DRAG = 75
-
 export const DEFAULTS = {
+  enabled: true,
   width: null,
   height: null,
   gap: 16,
   active: 0,
   dots: true,
   buttons: true,
+  transition: { time: 0.3, mode: "ease" },
+  vertical: false,
   style: {
     root: true,
     buttons: true,
     dots: true
+  },
+  class: {
+    slider: "slider",
+    slide: "slide",
+    dots: "slider-dots",
+    dot: "slider-dot",
+    buttons: "slider-button",
+    buttonLeft: "slider-button-left",
+    buttonRight: "slider-button-right"
+  },
+  custom: {
+    dots: null,
+    buttons: null
   }
 }
 
@@ -199,28 +208,6 @@ class Slider {
    * @param {string | Element} mountTo Optional element to mount the slider to
    */
   constructor(id, options = {}, mountTo) {
-    this.config = {
-      enabled: true,
-      width: DEFAULTS.width,
-      height: DEFAULTS.height,
-      gap: DEFAULTS.gap,
-      active: DEFAULTS.active,
-      dots: DEFAULTS.dots,
-      buttons: DEFAULTS.buttons,
-      // TODO
-      // vertical: true,
-      transition: { time: 0.3, mode: "ease" },
-      style: {
-        root: DEFAULTS.style.root,
-        buttons: DEFAULTS.style.buttons,
-        dots: DEFAULTS.style.dots
-      },
-      custom: {
-        dots: null,
-        buttons: null
-      }
-    }
-
     this.on = {
       dragStart: () => {},
       dragEnd: () => {},
@@ -230,7 +217,7 @@ class Slider {
       slideChangeFromDot: () => {},
       slideChangeFromDrag: () => {}
     }
-    this.config = mergeDeep(this.config, options)
+    this.config = mergeDeep(DEFAULTS, options)
     this.on = Object.assign(this.on, options?.on ?? {})
     this.ready = false
     this.id = id
@@ -254,16 +241,6 @@ class Slider {
       by: 1
     }
 
-    const custom = this.config.custom.buttons
-
-    if (custom) {
-      this.left.el = typeof custom === "string" ? makeEl(custom) : custom
-      this.right.el = typeof custom === "string" ? makeEl(custom) : custom
-    } else {
-      this.left.el.innerHTML = iconLeft
-      this.right.el.innerHTML = iconright
-    }
-
     this._init()
   }
 
@@ -271,6 +248,12 @@ class Slider {
 
   _init() {
     this.root = this.root || document.querySelector(this.id)
+
+    if (!this.root) {
+      throw new Error(
+        `Did not find element with the id ${this.id}. Make sure your body contains <div id="${this.id}"></div> \n\n`
+      )
+    }
 
     // If mount to element is provided, "teleport" the slider there
     if (this.mountTo) {
@@ -295,16 +278,22 @@ class Slider {
       }
     }
 
-    if (!this.root) {
-      throw new Error(
-        `Did not find element with the id ${this.id}. Make sure your body contains <div id="${this.id}"></div> \n\n`
-      )
+    // Custom buttons
+    const custom = this.config.custom.buttons
+
+    if (custom) {
+      this.left.el = typeof custom === "string" ? makeEl(custom) : custom
+      this.right.el = typeof custom === "string" ? makeEl(custom) : custom
+    } else {
+      this.left.el.innerHTML = iconLeft
+      this.right.el.innerHTML = iconright
     }
+
     // Wrap inner children in a new element which will handle touch screens
     const org_html = this.root.innerHTML
     const new_html = "<div id='slider-wrapper'>" + org_html + "</div>"
     this.root.innerHTML = new_html
-    this.root.classList.add("slider")
+    this.root.classList.add(this.config.class.slider)
     this.wrap = this.root.children[0]
     this.slides = this.wrap.children
 
@@ -337,7 +326,6 @@ class Slider {
     // of "slides" per slide
     if (this.config.slides > 1) {
       // TODO: if more than 1 slide is showing, must calculate slide width based on that
-      // IMPLEMENT
     } else {
       this.slideWidth = this.rootWidth
     }
@@ -350,6 +338,13 @@ class Slider {
 
     // Button configuration
     if (this.config.buttons) {
+      // Append class names
+      this.left.el.classList.add(this.config.class.buttons)
+      this.right.el.classList.add(this.config.class.buttons)
+
+      this.left.el.classList.add(this.config.class.buttonLeft)
+      this.right.el.classList.add(this.config.class.buttonRight)
+
       // Add a unique ID for styling purposes
       this.left.el.setAttribute("id", "slider-button-left")
       this.right.el.setAttribute("id", "slider-button-right")
@@ -374,6 +369,7 @@ class Slider {
     this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
 
     for (const slide of this.slides) {
+      slide.classList.add(this.config.class.slide)
       slide.addEventListener("click", (e) => this._handleSlideClick(e))
     }
 
@@ -495,7 +491,7 @@ class Slider {
 
       // Create dot wrapper
       this.dots = document.createElement("div")
-      this.dots.classList.add("slider-dots")
+      this.dots.classList.add(this.config.class.dots)
 
       // Loop over each slide and create a button for it
       for (let i = 0; i < this.slides.length; i++) {
@@ -508,7 +504,7 @@ class Slider {
           // Replace native dot with the userp provided element
           dot = typeof custom === "string" ? makeEl(custom) : custom
         } else {
-          dot.classList.add("slider-dot")
+          dot.classList.add(this.config.class.dot)
         }
 
         dot.addEventListener("click", () => {
@@ -701,7 +697,8 @@ class Slider {
 
       const el = slide({
         index: this.active,
-        total: this.slides.length
+        total: this.slides.length,
+        last: this.slides.length - 1
       })
 
       if (Array.isArray(el)) {
@@ -723,9 +720,9 @@ class Slider {
   }
 
   /**
+   * Removes a slide at the given index from the slider
    *
    * @param {*} index
-   * @returns
    */
 
   remove(index) {
@@ -792,15 +789,9 @@ class Slider {
     }
   }
 
-  config(conf) {
-    // TODO: assign new settings, re-render slider
-    // while keeping active slide
-  }
+  config(conf) {}
 
-  reverse() {
-    // TODO
-    // Swaps all children
-  }
+  reverse() {}
 
   /*----------  Events  ----------*/
 

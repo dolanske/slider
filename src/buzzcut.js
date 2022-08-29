@@ -29,7 +29,6 @@ export function register() {
     const elements = document.querySelectorAll("[slider]")
 
     elements.forEach((element) => {
-      // TODO: add option for every single option
       const id = element.attributes.getNamedItem("slider")?.value
 
       const width = Number(
