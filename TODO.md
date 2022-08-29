@@ -10,6 +10,12 @@
 - [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
 - [ ] [Slider] Convert style constants into a function which allows overriding values (essentially a deep merge) + use class names from DEFAULTS and not hardcoded ones. Remove border-radius from default styles and only append if it DEFAULTS.rounded has a value
+- [ ] [Slider] Add window event to check for resizing. Recalculate styles when it triggers
+
+## Optional
+
+- [ ] [Slider] Option to set position of dots (top,right,bottom=default, left)
+- [ ] [Slider] Option to hide buttons if they are disabled
 
 ## Done
 
