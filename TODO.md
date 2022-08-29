@@ -7,11 +7,13 @@
 - [ ] [Slider] Test every method
 - [ ] [Defaults] Tweak default CSS
 - [ ] [Improvement] Before slide completes initialization, should hide it or something to prevent blinking
-- [ ] [Buzzcut] Add attribute checking for every available option (for deeply nested, use slider-level-deeperlevel syntax)
+- [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
+- [ ] [Bug] Arrows are disabled when only 2 slides are available
 
 ## Done
 
+- [x] [Buzzcut] Add attribute checking for every available option (for deeply nested, use slider-level-deeperlevel syntax)
 - [x] [Slider] Implement default class names + using user provided class names
 - [x] [Defaults] Complete the defaults object
 - [x] [Bug] Sometimes during dragging it skips multiple slides

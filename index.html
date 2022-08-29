@@ -11,7 +11,7 @@
 
     <style>
       body {
-        height: 50vh;
+        height: 25vh;
       }
 
       .slide {
@@ -24,24 +24,37 @@
     </style>
   </head>
   <body>
-    <div id="slider">
+    <!-- <div id="slider">
       <div><h2>Slide 1</h2></div>
       <div><h2>Slide 2</h2></div>
       <div><h2>Slide 3</h2></div>
       <div><h2>Slide 4</h2></div>
+    </div> -->
+
+    <div slider="foo">
+      <div><h1>foo 1</h1></div>
+      <div><h1>foo 2</h1></div>
+      <div><h1>foo 3</h1></div>
+    </div>
+    <hr />
+
+    <div slider="bar">
+      <div><h1>bar 1</h1></div>
+      <div><h1>bar 2</h1></div>
     </div>
 
-    <button id="action">Reverse</button>
+    <button id="action">next</button>
   </body>
 
   <script type="module">
-    import Slider from "./index.js"
+    import { register, next } from "./index.js"
 
-    const slider = new Slider("#slider")
+    register()
 
     const action = document.querySelector("#action")
     action.addEventListener("click", () => {
-      slider.reverse()
+      // next("bar")
+      next()
     })
   </script>
 </html>

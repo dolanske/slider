@@ -132,6 +132,7 @@ function setStyle(el, property, value, unit) {
 
 const minDiff = (a, b, v) => Math.abs(a - b) > v && Math.abs(b - a) > v
 const isNil = (v) => v === undefined || v === null
+export const isEmpty = (v) => v.length === 0 || isNil(v)
 const isFunc = (v) => Object.prototype.toString.call(v) == "[object Function]"
 const isEl = (v) =>
   typeof HTMLElement === "object"
@@ -204,7 +205,7 @@ export const DEFAULTS = {
 class Slider {
   /**
    *
-   * @param {String} id Query selector for slider elements
+   * @param {String | Element} id Query selector for slider elements
    * @param {Object} options Slider options (see documentation)
    * @param {string | Element} mountTo Optional element to mount the slider to
    */
@@ -222,8 +223,6 @@ class Slider {
     this.on = Object.assign(this.on, options?.on ?? {})
     this.ready = false
     this.id = id
-    this.root = null
-    this.mountTo = document.querySelector(mountTo)
     this.wrap = null
     this.slides = null
     this.dots = null
@@ -236,13 +235,19 @@ class Slider {
     this.left = document.createElement("button")
     this.right = document.createElement("button")
 
+    this.mountTo =
+      typeof this.mountTo === "string"
+        ? document.querySelector(this.mountTo)
+        : this.mountTo
+
     this._init()
   }
 
   /*----------  Private API  ----------*/
 
   _init() {
-    this.root = this.root || document.querySelector(this.id)
+    this.root =
+      typeof this.id === "string" ? document.querySelector(this.id) : this.id
 
     if (!this.root) {
       throw new Error(
@@ -319,6 +324,12 @@ class Slider {
     // The reason for that is, if we show 2 divs per slide, then suddenly we'll
     // have to divide the number of active slides / dots etc. by the amount
     // of "slides" per slide
+
+    // REVIEW
+    // Could sub-dividing slides into wrapper "slides" simplify the implementatiion?
+    // No extra coding apart from creating those sub-slides would be required
+
+    // Essentially wrap-slide would have similar flex settings with the same gap as the config
     if (this.config.slides > 1) {
       // TODO: if more than 1 slide is showing, must calculate slide width based on that
     } else {
