@@ -81,64 +81,60 @@ Given the simplicity, the slider class offers a pretty solid amount of customiza
  */
 const slider = new Slider(id, options, mountTo)
 
-const slider = new Slider(
-  "#my-slider",
-  {
-    // Controls if user can interact with the slider
-    enabled: true,
-    // Slider element width in pixels
-    width: null, // 100%
-    // Slider element height in pixels
-    height: null, // 100%
-    // Gap between each slide in pixels
-    gap: 16,
-    // Currently active slide
-    active: 0,
-    // Enables / disables control dots
-    dots: true,
-    // Enables / disables left and right control buttons
+const slider = new Slider("#my-slider", {
+  // Controls if user can interact with the slider
+  enabled: true,
+  // Slider element width in pixels
+  width: null, // 100%
+  // Slider element height in pixels
+  height: null, // 100%
+  // Gap between each slide in pixels
+  gap: 16,
+  // Currently active slide
+  active: 0,
+  // Enables / disables control dots
+  dots: true,
+  // Enables / disables left and right control buttons
+  buttons: true,
+  // If set to true, slider will working top to bottom
+  vertical: false,
+  // Update the CSS transition object
+  transition: { time: 0.3, mode: "ease" },
+  // Controls which parts of the slider come with pre-made styling
+  style: {
     buttons: true,
-    // If set to true, slider will working top to bottom
-    vertical: false,
-    // Update the CSS transition object
-    transition: { time: 0.3, mode: "ease" },
-    // Controls which parts of the slider come with pre-made styling
-    style: {
-      buttons: true,
-      dots: true,
-      // Disabling this could break the slider functionality without proper user implementation
-      root: true
-    },
-    // Add custom classes to slider elements
-    // Because the wrapper + slides are initiated in HTML, you can only add custom class to the generated elements
-    class: {
-      slider: "slider",
-      slide: "slide",
-      dots: "slider-dots",
-      dot: "slider-dot",
-      buttons: "slider-button",
-      buttonLeft: "slider-button-left",
-      buttonRight: "slider-button-right"
-    },
-    // Replace the navigation elements with your own
-    // Accepts a template string or a HTMLElement
-    custom: {
-      dots: null,
-      buttons: null
-    },
-    // Callback functions called when these events occur
-    on: {
-      dragStart: null,
-      dragEnd: null,
-      slideClick: null,
-      slideChange: null, // Fires parallel with all the following events vvv
-      slideChangeFromDot: null,
-      slideChangeFromButton: null,
-      slideChangeFromDrag: null
-    }
+    dots: true,
+    // Disabling this could break the slider functionality without proper user implementation
+    root: true
   },
-  "#element-to-mount-to"
-)
+  // Add custom classes to slider elements
+  // Because the wrapper + slides are initiated in HTML, you can only add custom class to the generated elements
+  class: {
+    slider: "slider",
+    slide: "slide",
+    dots: "slider-dots",
+    dot: "slider-dot",
+    buttons: "slider-button",
+    buttonLeft: "slider-button-left",
+    buttonRight: "slider-button-right"
+  },
+  // Replace the navigation elements with your own
+  // Accepts a template string or a HTMLElement
+  custom: {
+    dots: null,
+    buttons: null
+  },
+  // Callback functions called when these events occur
+  on: {
+    dragStart: null,
+    dragEnd: null,
+    slideClick: null,
+    slideChange: null, // Fires parallel with all the following events vvv
+    slideChangeFromDot: null,
+    slideChangeFromButton: null,
+    slideChangeFromDrag: null
+  }
+})
 ```
 
 ## Option events
