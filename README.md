@@ -73,7 +73,13 @@ This api section will contain examples and some will also be split into two part
 Given the simplicity, the slider class offers a pretty solid amount of customization. The following are all the available options with default values.
 
 ```js
-// These are the available slider options and their default values
+/**
+ *
+ * @param {String} id Query selector for slider elements
+ * @param {Object} options Slider options (see documentation)
+ * @param {string | Element} mountTo Optional element to mount the slider to
+ */
+const slider = new Slider(id, options, mountTo)
 
 const slider = new Slider(
   "#my-slider",
