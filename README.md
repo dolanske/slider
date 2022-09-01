@@ -1,8 +1,8 @@
 # Slider
 
-Woah wow whew slow down chief. You're telling me that in 2022 you are releasing another carousel slider? Honestly why don't you go and invent WordPress 2 while you're ✨ at it ✨.
+Woah wow whew slow down chief. You're telling me that in 2022 you are releasing another slider? Honestly why don't you go and invent WordPress 2 while you're ✨ at it ✨.
 
-Anyway, here we go, vanilla js carousel slider. Nothing special.
+Anyway, here we go, vanilla js carousel/slider. Nothing special. Except it's very special because I made it.
 
 Start by preparing your HTML.
 
