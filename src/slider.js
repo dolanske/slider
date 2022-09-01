@@ -248,9 +248,7 @@ class Slider {
     this.left = document.createElement("button")
     this.right = document.createElement("button")
     this.mountTo =
-      typeof this.mountTo === "string"
-        ? document.querySelector(this.mountTo)
-        : this.mountTo
+      typeof mountTo === "string" ? document.querySelector(mountTo) : mountTo
 
     this._init()
   }
@@ -272,7 +270,7 @@ class Slider {
       this.mountTo.appendChild(this.root)
     }
 
-    // Append
+    // Append style element to the document's head
     if (!this.config.disableStyle) {
       const styleEl = document.querySelector("#slider-style-element")
 
