@@ -27,6 +27,14 @@ const slider = new Slider("#slider", {
 
 And you're good to go 👍. Out of the box the slider comes with a few methods and some more settings. Check out the **API** section for more details.
 
+---
+
+With time, I might make this an NPM package, but for now, if you want to use this within your projects, you can just reference the repo itself.
+
+```shell
+npm i -S git+https://github.com/dolanske/slider.git
+```
+
 ## The 'Buzzcut approach'
 
 Hate writing javascript? Tell which linux distro you use while you're at it boss. You can also tag the slider element with an attribute `slider="<your_slider_id>"` or just `slider`. Note: if you don't specify the id, the slider will generate it for you. But you won't know it lol.
