@@ -179,6 +179,15 @@ const mergeDeep = (...items) => {
     return prev
   }, {})
 }
+const debounce = (fn, timeout = 300) => {
+  let t
+  return (...args) => {
+    clearTimeout(t)
+    t = setTimeout(() => {
+      fn.apply(this, args)
+    }, timeout)
+  }
+}
 
 /*----------  Main Slider Class  ----------*/
 
@@ -352,8 +361,6 @@ class Slider {
     this.style = document.createElement("style")
     document.head.appendChild(this.style)
 
-    this._calculateWrapperStyle()
-
     // Button configuration
     if (this.config.buttons) {
       // Append class names
@@ -395,6 +402,36 @@ class Slider {
       slide.addEventListener("click", (e) => this._handleSlideClick(e))
     }
 
+    // Add an event listener to recalculate root width
+    // unless we use a specific dimensions
+    window.addEventListener(
+      "resize",
+      debounce(() => {
+        // Update root values
+        if (!this.config.width) {
+          this.rootWidth = Number(
+            window
+              .getComputedStyle(this.root)
+              .getPropertyValue("width")
+              .slice(0, -2)
+          )
+        }
+
+        if (!this.config.height) {
+          this.rootHeight = Number(
+            window
+              .getComputedStyle(this.root)
+              .getPropertyValue("height")
+              .slice(0, -2)
+          )
+        }
+
+        // Trigger style recalculation
+        this._updateCSS()
+      }, 10)
+    )
+
+    this._updateCSS()
     this._generateDots()
     this._updateNav(this.active)
 
@@ -474,7 +511,7 @@ class Slider {
   }
 
   // During recalculation, clear all dynamic styling
-  _calculateWrapperStyle() {
+  _updateCSS() {
     this.style.replaceChildren()
 
     if (this.config.height) {
@@ -744,7 +781,7 @@ class Slider {
       this.wrap.insertBefore(slide, this.wrap.children[index])
     }
 
-    this._calculateWrapperStyle()
+    this._updateCSS()
     this._generateDots()
     this._updateNav(this.active)
     this.slides = this.wrap.children
@@ -785,7 +822,7 @@ class Slider {
       this._set(this.active - 1)
     }
 
-    this._calculateWrapperStyle()
+    this._updateCSS()
     this._generateDots()
     this._updateNav(this.active)
   }

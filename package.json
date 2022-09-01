@@ -1,6 +1,6 @@
 {
   "name": "@dolanske/slider",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple framework agnostic & dependency free slider/carousel.",
   "main": "index.js",
   "scripts": {
