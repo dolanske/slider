@@ -35,6 +35,12 @@ With time, I might make this an NPM package, but for now, if you want to use thi
 npm i -S git+https://github.com/dolanske/slider.git
 ```
 
+If you're using it in a typescript project, make sure to add this snippet into your `.d.ts` file
+
+```ts
+declare module "@dolanske/slider"
+```
+
 ## The 'Buzzcut approach'
 
 Hate writing javascript? Tell which linux distro you use while you're at it boss. You can also tag the slider element with an attribute `slider="<your_slider_id>"` or just `slider`. Note: if you don't specify the id, the slider will generate it for you. But you won't know it lol.
