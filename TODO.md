@@ -6,11 +6,9 @@
 - [ ] [Slider] Implement calculation of showing multiple slides in 1 "slide"
 - [ ] [Slider] Test every method
 
-- [ ] [Improvement] Before slide completes initialization, should hide it or something to prevent blinking
 - [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
 - [ ] [Slider] Convert style constants into a function which allows overriding values (essentially a deep merge) + use class names from DEFAULTS and not hardcoded ones. Remove border-radius from default styles and only append if it DEFAULTS.rounded has a value
-- [ ] [Slider] Add window event to check for resizing. Recalculate styles when it triggers
 
 ## Optional
 
@@ -19,6 +17,7 @@
 
 ## Done
 
+- [x] [Slider] Add window event to check for resizing. Recalculate styles when it triggers
 - [x] [Buzzcut] Add attribute checking for every available option (for deeply nested, use slider-level-deeperlevel syntax)
 - [x] [Slider] Implement default class names + using user provided class names
 - [x] [Defaults] Complete the defaults object
@@ -32,6 +31,5 @@
 
 ## Finalization
 
-- [ ] [Ship] Make a minimized dist file
 - [ ] [Ship] Make project public, create a release 1.0.0
 - [ ] [Ship] Add to NPM
