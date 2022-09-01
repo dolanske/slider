@@ -56,14 +56,14 @@ Let's check out an example:
 </div>
 ```
 
+After your DOM is loaded, make sure you import the `register()` method and run it. All it does is collect all the sliders you've prepared and initializes them.
+
 ```js
 import { register } from "./slider.js"
 
 // Sliders will be registered when DOM is loaded so it does not matter where you call this function
 register()
 ```
-
-After your DOM is loaded, make sure you import the `register()` method and run it. All it does is collect all the sliders you've prepared and initializes them.
 
 ```js
 import { next, prev } from "./slider.js"
