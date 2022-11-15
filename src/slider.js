@@ -696,7 +696,7 @@ class Slider {
    */
   set(func) {
     if (isNil(func)) {
-      throw new Error("Invalid input")
+      throw new TypeError("Invalid input")
     }
 
     if (!isNaN(func)) {
@@ -711,7 +711,7 @@ class Slider {
       })
 
       if (isNaN(index) || isNil(index)) {
-        throw new Error("You must return a number in the set() function")
+        throw new TypeError("You must return a number in the set() function")
       }
 
       this._set(index)
