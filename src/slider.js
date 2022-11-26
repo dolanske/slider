@@ -578,6 +578,7 @@ class Slider {
 
       // Create dot wrapper
       this.dots = document.createElement("div")
+      this.dots.setAttribute('role', 'group')
       this.dots.classList.add(this.config.class.dots)
 
       // Loop over each slide and create a button for it
@@ -595,7 +596,7 @@ class Slider {
         }
 
         // SECTION: accessibility
-        dot.setAttribute('aria-label', `Slide ${i + 1}`)
+        dot.setAttribute('aria-label', `Slide ${i + 1} of ${this.slides.length}`)
 
         dot.addEventListener("click", () => {
           this.changedBy = "dot"
@@ -628,8 +629,10 @@ class Slider {
       for (let i = 0; i < this.slides.length; i++) {
         if (i === index) {
           this.dots.children[i].classList.add("active")
+          this.dots.children[i].setAttribute('aria-current', true)
         } else {
           this.dots.children[i].classList.remove("active")
+          this.dots.children[i].setAttribute('aria-current', false)
         }
       }
     }
