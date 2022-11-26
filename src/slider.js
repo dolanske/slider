@@ -3,9 +3,9 @@
 /*----------  CSS  ----------*/
 
 const iconLeft =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z"/></svg>'
+  '<svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z"/></svg>'
 const iconright =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>'
+  '<svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>'
 
 const rootCSS = /* CSS */ `
   .slider {
@@ -189,6 +189,11 @@ const debounce = (fn, timeout = 300) => {
   }
 }
 
+function prefersReduced() {
+  return window.matchMedia(`(prefers-reduced-motion: reduce)`) === true || window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
+
+}
+
 /*----------  Main Slider Class  ----------*/
 
 // Minimum amount of pixels to drag before a slide changes
@@ -309,6 +314,17 @@ class Slider {
       this.left.innerHTML = iconLeft
       this.right.innerHTML = iconright
     }
+
+    // Add aria labels to navigation buttons
+    // SECTION: accessibility
+    this.left.setAttribute('aria-label', 'Previous slide')
+    this.left.setAttribute('title', 'Previous slide')
+
+    this.right.setAttribute('aria-label', 'Next slide')
+    this.right.setAttribute('title', 'Next slide')
+
+    this.root.setAttribute('role', 'region')
+    this.root.setAttribute('aria-label', `Slider ${this.id}`)
 
     // Wrap inner children in a new element which will handle touch screens
     const org_html = this.root.innerHTML
@@ -522,6 +538,11 @@ class Slider {
       setStyle(this.root, "width", this.rootWidth, "px")
     }
 
+    // SECTION: accessibility
+    if (prefersReduced()) {
+      this.config.transition.time = 0
+    }
+
     setStyle(
       this.wrap,
       "transition",
@@ -572,6 +593,9 @@ class Slider {
         } else {
           dot.classList.add(this.config.class.dot)
         }
+
+        // SECTION: accessibility
+        dot.setAttribute('aria-label', `Slide ${i + 1}`)
 
         dot.addEventListener("click", () => {
           this.changedBy = "dot"
@@ -857,10 +881,18 @@ class Slider {
     }
   }
 
-  config(conf) {
+  setConfig(conf) {
     console.warn(
       "[Experimental] This function is not implemented yet. Hello world?"
     )
+
+    console.log(conf);
+
+    // Update internal settings
+
+    // Re-render controls
+
+    // KEEP SLIDERS!!
   }
 
   /**

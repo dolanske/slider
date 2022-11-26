@@ -20,41 +20,31 @@
     </style>
   </head>
   <body>
-    <!-- <div id="slider">
-      <div><h2>Slide 1</h2></div>
-      <div><h2>Slide 2</h2></div>
-      <div><h2>Slide 3</h2></div>
-      <div><h2>Slide 4</h2></div>
-    </div> -->
-
-    <div slider="foo">
-      <div><h1>I am FOO 1</h1></div>
-      <div><h1>I am FOO 2</h1></div>
-      <div><h1>I am FOO 3</h1></div>
+    <div id="slider">
+      <div><h1>First Slide</h1></div>
+      <div><h1>Second Slide</h1></div>
+      <div><h1>Third Slide</h1></div>
+      <div><h1>Fifth slide</h1> </div>
+      <div><h1>Fifth slide</h1> </div>
     </div>
-
-    <br />
-    <br />
-
-    <br />
-    <br />
-
-    <div slider="bar">
-      <div><h1>I am BAR 1</h1></div>
-      <div><h1>I am BAR 2</h1></div>
-    </div>
-
-    <!-- <button id="action">next</button> -->
   </body>
 
   <script type="module">
-    import { register, next } from "../index.js"
+    import { Slider } from "../index.js"
 
-    register()
+    const slider = new Slider('#slider', {
+      arrows: true,
+      // transition: 'none'
+    })
+    const action = document.querySelector("#action")
 
-    // const action = document.querySelector("#action")
-    // action.addEventListener("click", () => {
-    //   next()
-    // })
+    action.addEventListener("click", () => {
+      // next()
+      slider.setConfig({
+        
+      })
+
+      console.log(slider);
+    })
   </script>
 </html>
