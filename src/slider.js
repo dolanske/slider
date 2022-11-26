@@ -614,8 +614,10 @@ class Slider {
   _updateNav(index) {
     if (index === 0) {
       this.left.setAttribute("disabled", true)
+      this.left.setAttribute("aria-disabled", true)
     } else {
       this.left.removeAttribute("disabled")
+      this.left.setAttribute("aria-disabled", false)
     }
 
     if (index === this.slides.length - 1) {
