@@ -7,9 +7,8 @@ const iconLeft =
 const iconright =
   '<svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"/></svg>'
 
-const rootCSS = /* CSS */ `
+const CSS_root_required = /* CSS */ `
   .slider {
-    border-radius: 8px;
     display: block;
     width: 100%;
     height: 100%;
@@ -24,11 +23,6 @@ const rootCSS = /* CSS */ `
     left: 0;
     display: flex;
   }
-
-  .slide {
-    border-radius: 8px;
-    background-color: #eaeaea;
-  }
   
   .slider-disable-transition {
     -webkit-transition: none !important;
@@ -38,23 +32,34 @@ const rootCSS = /* CSS */ `
   }
 `
 
-const dotsCSS = /* CSS */ `
+const CSS_root_style = /* CSS */ `
+  .slider {
+    border-radius: 8px;
+  }
+
+  .slide {
+    border-radius: 8px;
+    background-color: #eaeaea;
+  }
+`
+
+const CSS_dots_style = /* CSS */ `
   .slider-dots {
     display: flex;
     justify-content: center;
-    gap: 12px;
     align-items: center;
     width: 100%;
     position: absolute;
-    bottom: 16px;
     left: 0;
+    gap: 12px;
+    bottom: 16px;
   }
 
   .slider-dots .slider-dot {
     transition: 0.1s all ease-in-out;
     display: block;
-    width: 11px !important;
-    height: 11px !important;
+    width: 11px;
+    height: 11px;
     border: none;
     cursor: pointer;
     border-radius: 50%;
@@ -70,7 +75,7 @@ const dotsCSS = /* CSS */ `
   }
 `
 
-const buttonsCSS = /* CSS */ `
+const CSS_btn_style = /* CSS */ `
   #slider-button-left,
   #slider-button-right {
     border-radius: 50%;
@@ -212,7 +217,8 @@ export const DEFAULTS = {
   style: {
     root: true,
     buttons: true,
-    dots: true
+    dots: true,
+    headless: false,
   },
   class: {
     slider: "slider",
@@ -262,7 +268,7 @@ class Slider {
     this.left = document.createElement("button")
     this.right = document.createElement("button")
     this.mountTo =
-      typeof mountTo === "string" ? document.querySelector(mountTo) : mountTo
+      typeof mountTo === "string" ? document.querySelector(mountTo) : null
 
     this._init()
   }
@@ -292,14 +298,20 @@ class Slider {
         const style = document.createElement("style")
         style.id = "slider-style-element"
 
-        // TODO: Add border
+        style.appendChild(document.createTextNode(CSS_root_required))
+        // style.appendChild(document.createTextNode(CSS_dots_required))
+        // style.appendChild(document.createTextNode(CSS_btn_required))
 
-        if (this.config.style.root)
-          style.appendChild(document.createTextNode(rootCSS))
-        if (this.config.style.dots)
-          style.appendChild(document.createTextNode(dotsCSS))
-        if (this.config.style.buttons)
-          style.appendChild(document.createTextNode(buttonsCSS))
+        if (!this.config.style.headless) {
+          if (this.config.style.root === true)
+            style.appendChild(document.createTextNode(CSS_root_style))
+          if (this.config.style.dots  === true)
+            style.appendChild(document.createTextNode(CSS_dots_style))
+          if (this.config.style.buttons  === true)
+            style.appendChild(document.createTextNode(CSS_btn_style))
+        }
+
+
         document.head.appendChild(style)
       }
     }

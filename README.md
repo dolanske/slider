@@ -117,13 +117,17 @@ const slider = new Slider("#my-slider", {
   // If true, users will be able to change slides by pressing arrow left and right
   arrows: false,
   // Update the CSS transition object
+  // To disable transitions, set `transition: false`
   transition: { time: 0.3, mode: "ease" },
   // Controls which parts of the slider come with pre-made styling
   style: {
     buttons: true,
     dots: true,
-    // Disabling this could break the slider functionality without proper user implementation
-    root: true
+    root: true,
+    // If this is set to true, the slider will omit any stylistic values. 
+    // Leaving the user to style the slider themselves
+    // This also acts as if all the previous values were set to false
+    headless: false  
   },
   // Add custom classes to slider elements
   // Because the wrapper + slides are initiated in HTML,
@@ -148,12 +152,54 @@ const slider = new Slider("#my-slider", {
     dragStart: null,
     dragEnd: null,
     slideClick: null,
-    slideChange: null, // Fires parallel with all the following events vvv
+    // Fires parallel with all the following events listed underneath
+    slideChange: null, 
     slideChangeFromDot: null,
     slideChangeFromButton: null,
     slideChangeFromDrag: null
   }
 })
+```
+
+To update the default options when using buzzcut, you can either use the experimental `config()` method, or set them using attribute keys and values.
+
+To preface this, attribute options do not support any `custom` or `on` (event listener) options. You can use buzzcut listener methods or append them using the experimental `config()` method.
+
+```js
+<div 
+  // Set slider ID, use the same ID when controlling the slider using buzzcut methods
+  slider="my-slider"
+  // All the other options mostly mimic the object defined syntax. In cases where the 
+  // option set up is different, there will be comments explaining the difference.
+  slider-enabled="true"
+  slider-width="null"
+  slider-height="null"
+  slider-gap="16"
+  slider-active="0"
+  slider-dots="true"
+  slider-buttons="true"
+  slider-vertical="false"
+  slider-arrows="false"
+  // Transition is split into two parts, length and the mode
+  slider-transition-time="0.3"
+  slider-transition-mode="ease"
+  //
+  slider-style-root="true"
+  slider-style-buttons="true"
+  slider-style-dots="true"
+  slider-style-headless="false"
+
+  slider-class-slider="slider"
+  slider-class-slide="slide"
+  slider-class-dots="slider-dots"
+  slider-class-dot="slider-dot"
+  slider-class-buttons="slider-button"
+  slider-class-button-left="slider-button-left"
+  slider-class-button-right="slider-button-right"
+  // Existing element which the slider is appended as a child to
+  slider-mount-to="null"
+></div>
+
 ```
 
 ### Option events

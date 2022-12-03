@@ -2,13 +2,11 @@
 
 - [ ] [Slider] Implement .config() method which updates slider without reloading it (keeping appened elements etc)
 - [ ] [Slider] Implement vertical slider
-- [ ] [Slider] Add option to add border radius to the entire slider
 - [ ] [Slider] Implement calculation of showing multiple slides in 1 "slide"
 - [ ] [Slider] Test every method
 
 - [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
-- [ ] [Slider] Convert style constants into a function which allows overriding values (essentially a deep merge) + use class names from DEFAULTS and not hardcoded ones. Remove border-radius from default styles and only append if it DEFAULTS.rounded has a value
 
 ## Optional
 
@@ -26,6 +24,9 @@
 - [x] [Slider] Implement .reverse() method which swaps all slides
 - [x] [Bug] Arrows are disabled when only 2 slides are available
 - [x] [Defaults] Tweak default CSS
+- [x] [Slider] Convert style constants into a function which allows overriding values (essentially a deep merge) + use class names from DEFAULTS and not hardcoded ones. Remove border-radius from default styles and only append if it DEFAULTS.rounded has a value
+  - [x] Split all styles to 'root' & 'head'
+  - [x] Add 'headless' option. Remove any styling. Users style it themselves
 
 ---
 

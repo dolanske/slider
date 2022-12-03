@@ -54,7 +54,8 @@ export function register() {
       const style = {
         root: getAttrVal(el, "slider-style-root", DEFAULTS.style.root),
         buttons: getAttrVal(el, "slider-style-buttons", DEFAULTS.style.buttons),
-        dots: getAttrVal(el, "slider-style-dots", DEFAULTS.style.dots)
+        dots: getAttrVal(el, "slider-style-dots", DEFAULTS.style.dots),
+        headless: getAttrVal(el, "slider-style-headless", DEFAULTS.style.dots)
       }
       const cls = {
         slider: getAttrVal(el, "slider-class-slider", DEFAULTS.class.slider),
@@ -80,7 +81,7 @@ export function register() {
         el.attributes.getNamedItem("slider-custom-buttons")?.value
       ) {
         console.warn(
-          "When using Buzzcut API, you can not use the <custom> options"
+          "When using Buzzcut API, you can not use the <custom> or <on> options"
         )
       }
 
