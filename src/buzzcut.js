@@ -204,3 +204,11 @@ export function onSlideChange(id, from, callback) {
 
   slider.onSlideChange(from, callback)
 }
+
+
+export function cfg(id, options) {
+  const slider = get(id)
+  if (!slider) invalidUse(id, "onSlideChange()")
+
+  slider.cfg(from, options)
+}

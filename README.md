@@ -161,16 +161,19 @@ const slider = new Slider("#my-slider", {
 })
 ```
 
-To update the default options when using buzzcut, you can either use the experimental `config()` method, or set them using attribute keys and values.
+To update the default options when using buzzcut, you can either use the experimental `cfg()` method, or set them using attribute keys and values.
 
-To preface this, attribute options do not support any `custom` or `on` (event listener) options. You can use buzzcut listener methods or append them using the experimental `config()` method.
+To preface this, attribute options do not support any `custom` or `on` (event listener) options. You can use buzzcut listener methods or append them using the experimental `cfg()` method.
 
 ```js
 <div 
   // Set slider ID, use the same ID when controlling the slider using buzzcut methods
+  // Most options mostly mimic the previous, object defined syntax. There are comments 
+  // in case the option definition differs.
   slider="my-slider"
-  // All the other options mostly mimic the object defined syntax. In cases where the 
-  // option set up is different, there will be comments explaining the difference.
+  // Existing element which the slider is appended as a child to
+  slider-mount-to="null"
+  // ** //
   slider-enabled="true"
   slider-width="null"
   slider-height="null"
@@ -183,7 +186,7 @@ To preface this, attribute options do not support any `custom` or `on` (event li
   // Transition is split into two parts, length and the mode
   slider-transition-time="0.3"
   slider-transition-mode="ease"
-  //
+  // ** //
   slider-style-root="true"
   slider-style-buttons="true"
   slider-style-dots="true"
@@ -196,8 +199,7 @@ To preface this, attribute options do not support any `custom` or `on` (event li
   slider-class-buttons="slider-button"
   slider-class-button-left="slider-button-left"
   slider-class-button-right="slider-button-right"
-  // Existing element which the slider is appended as a child to
-  slider-mount-to="null"
+  
 ></div>
 
 ```
@@ -457,6 +459,6 @@ reverse("my_slider")
 
 ### Experimental / Planned API
 
-#### `config()`
+#### `cfg()`
 
 Updates slider configuration without completely refreshing it. Meaning it keep any appended slides or other changes made after its initialization.

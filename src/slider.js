@@ -898,7 +898,7 @@ class Slider {
     }
   }
 
-  setConfig(conf) {
+  cfg(conf) {
     console.warn(
       "[Experimental] This function is not implemented yet. Hello world?"
     )

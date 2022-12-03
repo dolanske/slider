@@ -3,6 +3,7 @@ import {
   get,
   set,
   add,
+  cfg,
   next,
   remove,
   toggle,
@@ -17,8 +18,11 @@ import {
 } from "./src/buzzcut.js"
 
 export default Slider
+
+
 export {
   Slider,
+  cfg,
   get,
   set,
   add,
