@@ -396,7 +396,7 @@ slider.add((ctx) => {
 
 add("my_slider", ({ total }) => {
   // Append a new slide in the middle of the slider
-  return [`<div>NEW SLIDE!!</div>` Math.round(total / 2)]
+  return [`<div>NEW SLIDE!!</div>`, Math.round(total / 2)]
 })
 ```
 
