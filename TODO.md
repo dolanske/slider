@@ -1,12 +1,29 @@
 # TODO
 
 - [ ] [Slider] Implement .config() method which updates slider without reloading it (keeping appened elements etc)
+  - [x] enabled
+  - [] width
+  - [] height
+  - [] gap
+  - [x] active
+  - [] dots
+  - [] buttons
+  - [] vertical
+  - [x] arrows
+  - [x] transition
+  - [] style
+  - [] class
+  - [] custom
+  - [x] on
 - [ ] [Slider] Implement vertical slider
 - [ ] [Slider] Implement calculation of showing multiple slides in 1 "slide"
 - [ ] [Slider] Test every method
 
-- [ ] [Buzzcut] Document all options
 - [ ] [HTML] Clean up index.html and provide simple example
+
+- [x] [slider] Fix not resizing properly
+- [ ] Init VITE, add vitest + convert to typescript (v2.0)
+- [ ] Add vue wrapper
 
 ## Optional
 
@@ -15,6 +32,7 @@
 
 ## Done
 
+- [x] [Buzzcut] Document all options
 - [x] [Slider] Add window event to check for resizing. Recalculate styles when it triggers
 - [x] [Buzzcut] Add attribute checking for every available option (for deeply nested, use slider-level-deeperlevel syntax)
 - [x] [Slider] Implement default class names + using user provided class names

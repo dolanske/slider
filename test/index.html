@@ -27,23 +27,27 @@
       <div><h1>Fifth slide</h1> </div>
       <div><h1>Fifth slide</h1> </div>
     </div>
+
+    <button id="action">Update</button>
   </body>
 
   <script type="module">
     import { Slider } from "../index.js"
 
-    const slider = new Slider('#slider', {
-      transition: false
-    })
+    const slider = new Slider('#slider')
     const action = document.querySelector("#action")
 
     action.addEventListener("click", () => {
       // next()
-      slider.setConfig({
-        
+      slider.cfg({
+        enabled: false
+        // active: 3,
+        // on: {
+        //   slideChange() {
+        //     console.log('test');
+        //   }
+        // }
       })
-
-      console.log(slider);
     })
   </script>
 </html>

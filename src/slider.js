@@ -152,14 +152,6 @@ const minDiff = (a, b, v) => Math.abs(a - b) > v && Math.abs(b - a) > v
 const isNil = (v) => v === undefined || v === null
 export const isEmpty = (v) => v.length === 0 || isNil(v)
 const isFunc = (v) => Object.prototype.toString.call(v) == "[object Function]"
-const isEl = (v) =>
-  typeof HTMLElement === "object"
-    ? v instanceof HTMLElement
-    : v &&
-      typeof v === "object" &&
-      v !== null &&
-      v.nodeType === 1 &&
-      typeof v.nodeName === "string"
 const makeEl = (t) => {
   const w = document.createElement("div")
   w.innerHTML = t
@@ -232,6 +224,15 @@ export const DEFAULTS = {
   custom: {
     dots: null,
     buttons: null
+  },
+  on: {
+    dragStart: () => {},
+    dragEnd: () => {},
+    slideClick: () => {},
+    slideChange: () => {},
+    slideChangeFromButton: () => {},
+    slideChangeFromDot: () => {},
+    slideChangeFromDrag: () => {}
   }
 }
 
@@ -243,16 +244,9 @@ class Slider {
    * @param {string | Element} mountTo Optional element to mount the slider to
    */
   constructor(id, options = {}, mountTo) {
-    this.on = {
-      dragStart: () => {},
-      dragEnd: () => {},
-      slideClick: () => {},
-      slideChange: () => {},
-      slideChangeFromButton: () => {},
-      slideChangeFromDot: () => {},
-      slideChangeFromDrag: () => {}
-    }
     this.config = mergeDeep(DEFAULTS, options)
+
+    this.on = this.config.on
     this.on = Object.assign(this.on, options?.on ?? {})
     this.ready = false
     this.id = id
@@ -420,10 +414,7 @@ class Slider {
     this.wrap.addEventListener("mousemove", (e) => this._handleDragMove(e))
     this.wrap.addEventListener("mouseup", (e) => this._handleDragEnd(e))
     this.wrap.addEventListener("mouseleave", (e) => this._handleMouseLeave(e))
-
-    if (this.config.arrows) {
-      window.addEventListener("keydown", (e) => this._handleKeyPress(e))
-    }
+    window.addEventListener("keydown", (e) => this._handleKeyPress(e))
 
     for (const slide of this.slides) {
       slide.classList.add(this.config.class.slide)
@@ -468,7 +459,7 @@ class Slider {
   }
 
   _handleKeyPress({ key }) {
-    if (this.config.enabled) {
+    if (this.config.enabled && this.config.arrows) {
       if (key == "ArrowLeft") this.prev()
       if (key == "ArrowRight") this.next()
     }
@@ -492,8 +483,7 @@ class Slider {
     this.wrap.classList.remove("slider-disable-transition")
     this.dragging = false
 
-    const from = this.active
-
+    const from = this.activex
     const dragEnd = this._currentDragPos(e)
 
     if (minDiff(this.dragStart, dragEnd, MIN_DRAG)) {
@@ -555,11 +545,8 @@ class Slider {
       this.config.transition.time = 0
     }
 
-    setStyle(
-      this.wrap,
-      "transition",
-      `${this.config.transition.time}s left ${this.config.transition.mode}`
-    )
+    
+
     setStyle(this.wrap, "gap", this.config.gap, "px")
     setStyle(
       this.wrap,
@@ -575,10 +562,25 @@ class Slider {
       "px"
     )
 
+    this.slideWidth = this.rootWidth
+
     for (const slide of this.slides) {
       setStyle(slide, "width", this.rootWidth, "px")
       setStyle(slide, "height", this.rootHeight, "px")
     }
+
+    if (this.active !== 0) {
+      const left = (this.slideWidth + this.config.gap) * this.active * -1
+      this.fromLeft = left
+      setStyle(this.wrap, "left", left, "px")
+    }
+
+    if (this.config.transition)
+      setStyle(
+        this.wrap,
+        "transition",
+        `${this.config.transition.time}s left ${this.config.transition.mode}`
+      )
   }
 
   _generateDots() {
@@ -817,7 +819,7 @@ class Slider {
         // Call itself because this returns either string or a HTML element
         this.add(el, index)
       }
-    } else if (isEl(slide)) {
+    } else if (nodeType in slide) {
       // is a html element
       this.wrap.insertBefore(slide, this.wrap.children[index])
     }
@@ -898,12 +900,56 @@ class Slider {
     }
   }
 
-  cfg(conf) {
-    console.warn(
-      "[Experimental] This function is not implemented yet. Hello world?"
-    )
+  cfg({ active, on, transition, arrows, enabled }) {
+    let shouldUpdateCSS = false
 
-    console.log(conf);
+    // console.warn(
+    //   "[Experimental] This function is not implemented yet. Hello world?"
+    // )
+    
+    // active
+    if (!isNil(active)) {
+      this._set(active)
+    }
+
+    // on
+    if (!isNil(on)) {
+      const { dragStart, dragEnd, slideClick, slideChange, slideChangeFromDot, slideChangeFromButton, slideChangeFromDrag } = on
+      
+      if (dragStart) this.onDragStart(dragStart)
+      if (dragEnd) this.onDragEnd(dragEnd)
+      if (slideClick) this.onSlideClick(slideClick)
+      if (slideChange) this.onSlideChange(slideChange)
+      if (slideChangeFromDot) this.onSlideChangeFromDot(slideChangeFromDot)
+      if (slideChangeFromButton) this.onSlideChangeFromButton(slideChangeFromButton)
+      if (slideChangeFromDrag) this.onSlideChangeFromDrag(slideChangeFromDrag)
+    }
+
+    // transition
+    if (!isNil(transition)) {
+      this.config.transition = transition
+      this.wrap.style.removeProperty('transition')
+
+      shouldUpdateCSS = true
+    }
+
+    // Arrows
+    if (!isNil(arrows)) {
+      this.config.arrows = arrows
+    }
+
+    // Enabled
+    if (!isNil(enabled)) {
+      if (enabled)
+        this.enable()
+      else
+        this.disable()
+    }
+
+
+    if (shouldUpdateCSS)
+      this._updateCSS()
+
 
     // Update internal settings
 

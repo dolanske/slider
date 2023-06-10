@@ -106,7 +106,7 @@ const slider = new Slider("#my-slider", {
   height: null, // 100%
   // Gap between each slide in pixels
   gap: 16,
-  // Currently active slide
+  // Currently active slide, zero indexed
   active: 0,
   // Enables / disables control dots
   dots: true,
