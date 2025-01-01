@@ -52,3 +52,14 @@
 
 - [ ] [Ship] Make project public, create a release 1.0.0
 - [ ] [Ship] Add to NPM
+
+## TODO
+
+Slider v2
+
+- NOT a full rewrite, just clean up, rename methods, and improve stuff
+- Written in typescript
+  - Autocomplete stuff ()
+- Written as web component (to avoid style mismatch and whatever)
+- CSS modules ?
+- Use `eminem` for events

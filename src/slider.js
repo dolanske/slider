@@ -15,6 +15,14 @@ const CSS_root_required = /* CSS */ `
     overflow: hidden;
     position: relative;
   }
+
+  .slider * {
+    user-select: none;
+  }
+
+  .slider img {
+    pointer-events: none;
+  }
   
   #slider-wrapper {
     position: absolute;

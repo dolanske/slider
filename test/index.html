@@ -11,21 +11,39 @@
 
     <style>
       body {
-        height: 25vh;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
       }
 
-      #THE-WRAPPER {
-        height: 500px;
+      #slider {
+        height: 324px;
+        width: 640px;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     </style>
   </head>
   <body>
     <div id="slider">
-      <div><h1>First Slide</h1></div>
-      <div><h1>Second Slide</h1></div>
-      <div><h1>Third Slide</h1></div>
-      <div><h1>Fifth slide</h1> </div>
-      <div><h1>Fifth slide</h1> </div>
+      <div>
+        <img src="https://friends.hivecom.net/data/image/w3lS5okjTlO0Rga8ZVdQZw/full.jpg" alt="">
+      </div>
+      <div>
+        <img src="https://friends.hivecom.net/data/image/2ntDTnTXSp-Yl1RyMh-btA/full.jpg" alt="">
+      </div>
+      <div>
+        <img src="https://friends.hivecom.net/data/image/fPE_Mx1fRHu33TCAM3xn7w/full.jpg" alt="">
+      </div>
+
     </div>
 
     <button id="action">Update</button>
@@ -34,13 +52,15 @@
   <script type="module">
     import { Slider } from "../index.js"
 
-    const slider = new Slider('#slider')
+    const slider = new Slider('#slider', {
+      // transition: false
+    })
     const action = document.querySelector("#action")
 
     action.addEventListener("click", () => {
       // next()
       slider.cfg({
-        enabled: false
+        enabled: !slider.enabled
         // active: 3,
         // on: {
         //   slideChange() {
